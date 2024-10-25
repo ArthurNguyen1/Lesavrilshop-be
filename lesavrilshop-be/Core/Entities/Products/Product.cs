@@ -9,20 +9,20 @@ namespace lesavrilshop_be.Core.Entities.Products
 {
     public class Product: BaseEntity
     {
-        public string Name { get; private set; }
-        public string ProductDescription { get; private set; }
-        public string DeliveryDescription { get; private set; }
-        public int ParentCategoryId { get; private set; }
-        public decimal RatingAverage { get; private set; }
-        public int RatingQuantity { get; private set; }
-        public DateTime? DeletedAt { get; private set; }
+        public string Name { get; set; }
+        public string ProductDescription { get; set; }
+        public string DeliveryDescription { get; set; }
+        public int? ParentCategoryId { get; set; }
+        public decimal RatingAverage { get; set; }
+        public int RatingQuantity { get; set; }
+        public DateTime? DeletedAt { get; set; }
         
         public virtual Category ParentCategory { get; set; }
-        public virtual ICollection<ProductItem> ProductItems { get; private set; }
-        public virtual ICollection<Review> Reviews { get; private set; }
-        public virtual ICollection<ProductCategory> ProductCategories { get; private set; }
+        public virtual ICollection<ProductItem> ProductItems { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<ProductCategory> ProductCategories { get; set; }
         
-        public Product(string name, string productDescription, string deliveryDescription, int parentCategoryId)
+        public Product(string name, string productDescription, string deliveryDescription, int? parentCategoryId = null)
         {
             Name = name;
             ProductDescription = productDescription;
