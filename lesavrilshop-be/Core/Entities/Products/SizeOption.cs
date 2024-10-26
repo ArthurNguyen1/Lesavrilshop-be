@@ -8,7 +8,7 @@ namespace lesavrilshop_be.Core.Entities.Products
 {
     public class SizeOption: BaseEntity
     {
-        public string SizeName { get; private set; }
+        public string SizeName { get; set; }
         
         public SizeOption(string sizeName)
         {
