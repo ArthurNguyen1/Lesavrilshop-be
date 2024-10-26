@@ -8,7 +8,7 @@ namespace lesavrilshop_be.Core.Entities.Products
 {
     public class Color: BaseEntity
     {
-        public string ColorName { get; private set; }
+        public string ColorName { get; set; }
         
         public Color(string colorName)
         {
