@@ -34,7 +34,7 @@ namespace lesavrilshop_be.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving categories");
+                _logger.LogError(ex, "Error retrieving products");
                 return StatusCode(500, "Internal server error");
             }
         }
