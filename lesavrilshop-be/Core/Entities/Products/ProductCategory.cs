@@ -8,8 +8,8 @@ namespace lesavrilshop_be.Core.Entities.Products
 {
     public class ProductCategory: BaseEntity
     {
-        public int CategoryId { get; private set; }
-        public int ProductId { get; private set; }
+        public int CategoryId { get; set; }
+        public int ProductId { get; set; }
         
         public virtual Category Category { get; set; }
         public virtual Product Product { get; set; }
