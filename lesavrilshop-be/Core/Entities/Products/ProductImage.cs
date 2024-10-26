@@ -8,8 +8,8 @@ namespace lesavrilshop_be.Core.Entities.Products
 {
     public class ProductImage: BaseEntity
     {
-        public int ProductItemId { get; private set; }
-        public string ImageUrl { get; private set; }
+        public int ProductItemId { get; set; }
+        public string ImageUrl { get; set; }
         
         public virtual ProductItem ProductItem { get; set; }
         
