@@ -9,9 +9,9 @@ namespace lesavrilshop_be.Core.DTOs
     public class CreateProductImageDto
     {
         [Required]
-        public int ProductItemId { get; set; }
-
-        [Required]
         public string ImageUrl { get; set; }
+
+        public int? ProductItemId { get; set; }
+
     }
 }

@@ -14,13 +14,17 @@ namespace lesavrilshop_be.Api.Controllers
     public class ProductImageController : ControllerBase
     {
         private readonly IProductImageRepository _productImageRepository;
+        private readonly IProductItemRepository _productItemRepository;
+
         private readonly ILogger<ProductImageController> _logger;
 
         public ProductImageController(
             IProductImageRepository productImageRepository,
+            IProductItemRepository productItemRepository,
             ILogger<ProductImageController> logger)
         {
             _productImageRepository = productImageRepository;
+            _productItemRepository = productItemRepository;
             _logger = logger;
         }
 
@@ -65,6 +69,19 @@ namespace lesavrilshop_be.Api.Controllers
         {
             try
             {
+                if (productImageDto.ProductItemId.HasValue)
+                {
+                    var parentExists = await _productItemRepository.ExistsAsync(productImageDto.ProductItemId.Value);
+                    if (!parentExists)
+                    {
+                        return BadRequest(new 
+                        { 
+                            error = "Parent productImage does not exist",
+                            code = "INVALID_PARENT_PRODUCTIMAGE"
+                        });
+                    }
+                }
+                
                 var createdProductImage = await _productImageRepository.CreateAsync(productImageDto);
                 
                 return CreatedAtAction(

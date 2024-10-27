@@ -21,24 +21,28 @@ namespace lesavrilshop_be.Infrastructure.Repositories
 
         public async Task<IEnumerable<ProductItem>> GetAllAsync()
         {
-            return await _context.ProductItems.ToListAsync();
+            return await _context.ProductItems
+            .Include(pi => pi.Images)
+            .ToListAsync();
                 
         }
 
         public async Task<ProductItem> GetByIdAsync(int id)
         {
-            return await _context.ProductItems.FindAsync(id);
+            return await _context.ProductItems
+            .Include(pi => pi.Images)
+            .FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<ProductItem> CreateAsync(CreateProductItemDto productItemDto)
         {
             var productItem = new ProductItem(
-                productItemDto.ProductId,
-                productItemDto.ColorId,
-                productItemDto.SizeId,
                 productItemDto.OriginalPrice,
                 productItemDto.SalePrice,
-                productItemDto.QuantityInStock
+                productItemDto.QuantityInStock,
+                productItemDto.ProductId,
+                productItemDto.ColorId,
+                productItemDto.SizeId
             )
             {
                 CreatedAt = DateTime.UtcNow,
@@ -57,12 +61,12 @@ namespace lesavrilshop_be.Infrastructure.Repositories
             if (existingProductItem == null)
                 throw new KeyNotFoundException($"ProductItem with ID {productItem.Id} not found");
 
-            existingProductItem.ProductId = productItem.ProductId;
-            existingProductItem.ColorId = productItem.ColorId;
-            existingProductItem.SizeId = productItem.SizeId;
             existingProductItem.OriginalPrice = productItem.OriginalPrice;
             existingProductItem.SalePrice = productItem.SalePrice;
             existingProductItem.QuantityInStock = productItem.QuantityInStock;
+            existingProductItem.ProductId = productItem.ProductId;
+            existingProductItem.ColorId = productItem.ColorId;
+            existingProductItem.SizeId = productItem.SizeId;
             existingProductItem.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

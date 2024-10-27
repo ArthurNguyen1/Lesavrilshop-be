@@ -9,15 +9,6 @@ namespace lesavrilshop_be.Core.DTOs
     public class CreateProductItemDto
     {
         [Required]
-        public int ProductId { get; set; }
-
-        [Required]
-        public int ColorId { get; set; }
-
-        [Required]
-        public int SizeId { get; set; }
-
-        [Required]
         public decimal OriginalPrice { get; set; }
 
         [Required]
@@ -25,5 +16,11 @@ namespace lesavrilshop_be.Core.DTOs
 
         [Required]
         public int QuantityInStock { get; set; }
+
+        public int? ProductId { get; set; }
+
+        public int? ColorId { get; set; }
+
+        public int? SizeId { get; set; }
     }
 }

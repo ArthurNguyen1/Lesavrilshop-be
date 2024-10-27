@@ -32,8 +32,8 @@ namespace lesavrilshop_be.Infrastructure.Repositories
         public async Task<ProductImage> CreateAsync(CreateProductImageDto productImageDto)
         {
             var productImage = new ProductImage(
-                productImageDto.ProductItemId,
-                productImageDto.ImageUrl
+                productImageDto.ImageUrl,
+                productImageDto.ProductItemId
             )
             {
                 CreatedAt = DateTime.UtcNow,
