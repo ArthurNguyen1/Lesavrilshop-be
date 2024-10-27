@@ -14,13 +14,16 @@ namespace lesavrilshop_be.Api.Controllers
     public class ProductItemController : ControllerBase
     {
         private readonly IProductItemRepository _productItemRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<ProductItemController> _logger;
 
         public ProductItemController(
             IProductItemRepository productItemRepository,
+            IProductRepository productRepository,
             ILogger<ProductItemController> logger)
         {
             _productItemRepository = productItemRepository;
+            _productRepository = productRepository;
             _logger = logger;
         }
 
@@ -65,6 +68,19 @@ namespace lesavrilshop_be.Api.Controllers
         {
             try
             {
+                if (productItemDto.ProductId.HasValue)
+                {
+                    var parentExists = await _productRepository.ExistsAsync(productItemDto.ProductId.Value);
+                    if (!parentExists)
+                    {
+                        return BadRequest(new 
+                        { 
+                            error = "Parent ProductItem does not exist",
+                            code = "INVALID_PARENT_PRODUCTITEM"
+                        });
+                    }
+                }
+
                 var createdProductItem = await _productItemRepository.CreateAsync(productItemDto);
                 
                 return CreatedAtAction(

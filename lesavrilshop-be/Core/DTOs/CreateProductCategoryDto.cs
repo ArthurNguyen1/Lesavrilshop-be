@@ -8,10 +8,8 @@ namespace lesavrilshop_be.Core.DTOs
 {
     public class CreateProductCategoryDto
     {
-        [Required]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
-        [Required]
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
     }
 }

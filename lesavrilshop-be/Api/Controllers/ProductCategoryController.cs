@@ -14,13 +14,21 @@ namespace lesavrilshop_be.Api.Controllers
     public class ProductCategoryController : ControllerBase
     {
         private readonly IProductCategoryRepository _productCategoryRepository;
+
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
+
         private readonly ILogger<ProductCategoryController> _logger;
 
         public ProductCategoryController(
             IProductCategoryRepository productCategoryRepository,
+            IProductRepository productRepository,
+            ICategoryRepository categoryRepository,
             ILogger<ProductCategoryController> logger)
         {
             _productCategoryRepository = productCategoryRepository;
+            _productRepository = productRepository;
+            _categoryRepository =categoryRepository;
             _logger = logger;
         }
 
@@ -65,6 +73,32 @@ namespace lesavrilshop_be.Api.Controllers
         {
             try
             {
+                if (productCategoryDto.ProductId.HasValue)
+                {
+                    var parentExists = await _productRepository.ExistsAsync(productCategoryDto.ProductId.Value);
+                    if (!parentExists)
+                    {
+                        return BadRequest(new 
+                        { 
+                            error = "Parent productID of ProductCategory does not exist",
+                            code = "INVALID_PARENT_PRODUCTCATEGORY_PRODUCTID"
+                        });
+                    }
+                }
+
+                if (productCategoryDto.CategoryId.HasValue)
+                {
+                    var parentExists = await _categoryRepository.ExistsAsync(productCategoryDto.CategoryId.Value);
+                    if (!parentExists)
+                    {
+                        return BadRequest(new 
+                        { 
+                            error = "Parent categoryID of ProductCategory does not exist",
+                            code = "INVALID_PARENT_PRODUCTCATEGORY_CATEGORYID"
+                        });
+                    }
+                }
+
                 var createdProductCategory = await _productCategoryRepository.CreateAsync(productCategoryDto);
                 
                 return CreatedAtAction(

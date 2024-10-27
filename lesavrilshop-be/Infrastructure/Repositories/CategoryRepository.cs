@@ -23,6 +23,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories
         {
             return await _context.Categories
                 .Include(c => c.Subcategories)
+                .Include(c => c.ProductCategories)
                 .ToListAsync();
         }
 
@@ -30,6 +31,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories
         {
             return await _context.Categories
                 .Include(c => c.Subcategories)
+                .Include(c => c.ProductCategories)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

@@ -21,13 +21,19 @@ namespace lesavrilshop_be.Infrastructure.Repositories
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                .Include(p => p.ProductItems)
+                .Include(p => p.ProductCategories)
+                .ToListAsync();
                 
         }
 
         public async Task<Product> GetByIdAsync(int id)
         {
-            return await _context.Products.FindAsync(id);
+            return await _context.Products
+                .Include(p => p.ProductItems)
+                .Include(p => p.ProductCategories)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Product> CreateAsync(CreateProductDto productDto)
