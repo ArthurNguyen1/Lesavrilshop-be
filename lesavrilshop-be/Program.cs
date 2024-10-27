@@ -1,4 +1,6 @@
+using lesavrilshop_be.Application.Services;
 using lesavrilshop_be.Core.Interfaces.Repositories;
+using lesavrilshop_be.Core.Interfaces.Services;
 using lesavrilshop_be.Infrastructure.Data;
 using lesavrilshop_be.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     
+//Services
+builder.Services.AddScoped<IImageService, ImageService>();
+
 //Repositories
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
