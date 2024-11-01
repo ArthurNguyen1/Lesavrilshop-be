@@ -8,9 +8,9 @@ namespace lesavrilshop_be.Core.Entities.Orders
 {
     public class ShippingMethod: BaseEntity
     {
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public decimal Price { get; private set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
         
         public ShippingMethod(string name, string description, decimal price)
         {
