@@ -14,13 +14,16 @@ namespace lesavrilshop_be.Api.Controllers.Orders
     public class OrderItemController : ControllerBase
     {
         private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IShopOrderRepository _shopOrderRepository;
         private readonly ILogger<OrderItemController> _logger;
 
         public OrderItemController(
             IOrderItemRepository orderItemRepository,
+            IShopOrderRepository shopOrderRepository,
             ILogger<OrderItemController> logger)
         {
             _orderItemRepository = orderItemRepository;
+            _shopOrderRepository = shopOrderRepository;
             _logger = logger;
         }
 
@@ -65,6 +68,19 @@ namespace lesavrilshop_be.Api.Controllers.Orders
         {
             try
             {
+                if (orderItemDto.OrderId != 0)
+                {
+                    var parentExists = await _shopOrderRepository.ExistsAsync(orderItemDto.OrderId);
+                    if (!parentExists)
+                    {
+                        return BadRequest(new 
+                        { 
+                            error = "Parent Order does not exist",
+                            code = "INVALID_PARENT_ORDERITEM"
+                        });
+                    }
+                }
+                
                 var createdOrderItem = await _orderItemRepository.CreateAsync(orderItemDto);
                 
                 return CreatedAtAction(

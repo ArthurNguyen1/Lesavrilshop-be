@@ -9,16 +9,16 @@ namespace lesavrilshop_be.Core.Entities.Orders
 {
     public class ShopOrder: BaseEntity
     {
-        public int UserId { get; private set; }
-        public DateTime OrderDate { get; private set; }
-        public int OrderStatusId { get; private set; }
-        public string PaymentMethod { get; private set; }
-        public int? CouponId { get; private set; }
-        public int ShippingMethodId { get; private set; }
-        public int ShippingAddressId { get; private set; }
-        public decimal TotalQuantity { get; private set; }
-        public decimal TotalPrice { get; private set; }
-        public string? Note { get; private set; }
+        public int UserId { get; set; }
+        public DateTime OrderDate { get; set; }
+        public int OrderStatusId { get; set; }
+        public string PaymentMethod { get; set; }
+        public int? CouponId { get; set; }
+        public int ShippingMethodId { get; set; }
+        public int ShippingAddressId { get; set; }
+        public decimal TotalQuantity { get; set; }
+        public decimal TotalPrice { get; set; }
+        public string? Note { get; set; }
         
         public virtual ShopUser User { get; set; }
         public virtual OrderStatus Status { get; set; }
