@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using lesavrilshop_be.Core.DTOs.Products;
 using lesavrilshop_be.Core.Entities.Products;
 using lesavrilshop_be.Core.Interfaces.Repositories.Products;
+using lesavrilshop_be.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace lesavrilshop_be.Api.Controllers.Products
@@ -15,16 +16,18 @@ namespace lesavrilshop_be.Api.Controllers.Products
     {
         private readonly IProductImageRepository _productImageRepository;
         private readonly IProductItemRepository _productItemRepository;
-
+        private readonly IImageService _imageService;
         private readonly ILogger<ProductImageController> _logger;
 
         public ProductImageController(
             IProductImageRepository productImageRepository,
             IProductItemRepository productItemRepository,
+            IImageService imageService,
             ILogger<ProductImageController> logger)
         {
             _productImageRepository = productImageRepository;
             _productItemRepository = productItemRepository;
+            _imageService =imageService;
             _logger = logger;
         }
 
@@ -143,6 +146,38 @@ namespace lesavrilshop_be.Api.Controllers.Products
                 _logger.LogError(ex, "Error deleting productImage {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        //Product Image - related Cloudinary
+        [HttpPost("{id}/upload-image")]
+        public async Task<IActionResult> UploadImage(int id, IFormFile file)
+        {
+            var productImage = await _productImageRepository.GetByIdAsync(id);
+            if (productImage == null) return NotFound();
+
+            var uploadResult = await _imageService.AddImageAsync(file);
+            if (uploadResult == null) return BadRequest("Image upload failed");
+
+            productImage.ImageUrl = uploadResult.SecureUrl.AbsoluteUri;
+            await _productImageRepository.UpdateAsync(productImage);
+
+            return Ok(new { ImageUrl = productImage.ImageUrl });
+        }
+
+        [HttpDelete("{id}/delete-image")]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            var productImage = await _productImageRepository.GetByIdAsync(id);
+            if (productImage == null) return NotFound();
+
+            var publicId = productImage.ImageUrl.Split('/').Last().Split('.').First();
+            var deleteResult = await _imageService.DeleteImageAsync(publicId);
+            if (deleteResult.Result != "ok") return BadRequest("Image deletion failed");
+
+            productImage.ImageUrl = null;
+            await _productImageRepository.UpdateAsync(productImage);
+
+            return NoContent();
         }
     }
 }
