@@ -40,6 +40,7 @@ builder.Services.AddScoped<ISizeOptionRepository, SizeOptionRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderStatusRepository, OrderStatusRepository>();
 
 
 var app = builder.Build();

@@ -8,7 +8,7 @@ namespace lesavrilshop_be.Core.Entities.Orders
 {
     public class OrderStatus: BaseEntity
     {
-        public string Status { get; private set; }
+        public string Status { get; set; }
         
         public OrderStatus(string status)
         {
