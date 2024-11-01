@@ -4,19 +4,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace lesavrilshop_be.Core.DTOs
+namespace lesavrilshop_be.Core.DTOs.Products
 {
-    public class CreateProductDto
+    public class CreateCategoryDto
     {
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
 
         [Required]
-        public string ProductDescription { get; set; }
-
-        [Required]
-        public string DeliveryDescription { get; set; }
+        public string Image { get; set; }
 
         public int? ParentCategoryId { get; set; }
     }

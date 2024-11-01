@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace lesavrilshop_be.Core.DTOs
+namespace lesavrilshop_be.Core.DTOs.Products
 {
     public class CreateColorDto
     {

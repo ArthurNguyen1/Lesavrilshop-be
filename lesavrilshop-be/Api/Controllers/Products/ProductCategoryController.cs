@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using lesavrilshop_be.Core.DTOs;
+using lesavrilshop_be.Core.DTOs.Products;
 using lesavrilshop_be.Core.Entities.Products;
-using lesavrilshop_be.Core.Interfaces.Repositories;
+using lesavrilshop_be.Core.Interfaces.Repositories.Products;
 using Microsoft.AspNetCore.Mvc;
 
-namespace lesavrilshop_be.Api.Controllers
+namespace lesavrilshop_be.Api.Controllers.Products
 {
     [ApiController]
     [Route("api/[controller]")]

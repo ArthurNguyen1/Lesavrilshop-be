@@ -2,60 +2,61 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using lesavrilshop_be.Core.DTOs;
+using lesavrilshop_be.Core.DTOs.Products;
 using lesavrilshop_be.Core.Entities.Products;
-using lesavrilshop_be.Core.Interfaces.Repositories;
+using lesavrilshop_be.Core.Interfaces.Repositories.Products;
 using Microsoft.AspNetCore.Mvc;
 
-namespace lesavrilshop_be.Api.Controllers
+namespace lesavrilshop_be.Api.Controllers.Products
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductItemController : ControllerBase
+    public class ProductImageController : ControllerBase
     {
+        private readonly IProductImageRepository _productImageRepository;
         private readonly IProductItemRepository _productItemRepository;
-        private readonly IProductRepository _productRepository;
-        private readonly ILogger<ProductItemController> _logger;
 
-        public ProductItemController(
+        private readonly ILogger<ProductImageController> _logger;
+
+        public ProductImageController(
+            IProductImageRepository productImageRepository,
             IProductItemRepository productItemRepository,
-            IProductRepository productRepository,
-            ILogger<ProductItemController> logger)
+            ILogger<ProductImageController> logger)
         {
+            _productImageRepository = productImageRepository;
             _productItemRepository = productItemRepository;
-            _productRepository = productRepository;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductItem>>> GetProductItems()
+        public async Task<ActionResult<IEnumerable<ProductImage>>> GetProductImages()
         {
             try
             {
-                var productItems = await _productItemRepository.GetAllAsync();
-                return Ok(productItems);
+                var productImages = await _productImageRepository.GetAllAsync();
+                return Ok(productImages);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving productItems");
+                _logger.LogError(ex, "Error retrieving productImages");
                 return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductItem>> GetProductItem(int id)
+        public async Task<ActionResult<ProductImage>> GetProductImage(int id)
         {
             try
             {
-                var productItem = await _productItemRepository.GetByIdAsync(id);
-                if (productItem == null)
+                var productImage = await _productImageRepository.GetByIdAsync(id);
+                if (productImage == null)
                     return NotFound();
 
-                return Ok(productItem);
+                return Ok(productImage);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving productItem {Id}", id);
+                _logger.LogError(ex, "Error retrieving productImage {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -64,33 +65,33 @@ namespace lesavrilshop_be.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProductItem>> CreateProductItem(CreateProductItemDto productItemDto)
+        public async Task<ActionResult<ProductImage>> CreateProductImage(CreateProductImageDto productImageDto)
         {
             try
             {
-                if (productItemDto.ProductId.HasValue)
+                if (productImageDto.ProductItemId.HasValue)
                 {
-                    var parentExists = await _productRepository.ExistsAsync(productItemDto.ProductId.Value);
+                    var parentExists = await _productItemRepository.ExistsAsync(productImageDto.ProductItemId.Value);
                     if (!parentExists)
                     {
                         return BadRequest(new 
                         { 
-                            error = "Parent ProductItem does not exist",
-                            code = "INVALID_PARENT_PRODUCTITEM"
+                            error = "Parent productImage does not exist",
+                            code = "INVALID_PARENT_PRODUCTIMAGE"
                         });
                     }
                 }
-
-                var createdProductItem = await _productItemRepository.CreateAsync(productItemDto);
+                
+                var createdProductImage = await _productImageRepository.CreateAsync(productImageDto);
                 
                 return CreatedAtAction(
-                    nameof(GetProductItem),
-                    new { id = createdProductItem.Id },
-                    createdProductItem);
+                    nameof(GetProductImage),
+                    new { id = createdProductImage.Id },
+                    createdProductImage);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating productItem");
+                _logger.LogError(ex, "Error creating productImage");
                 return StatusCode(500, new 
                 { 
                     error = "Internal server error",
@@ -100,14 +101,14 @@ namespace lesavrilshop_be.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProductItem(int id, ProductItem productItem)
+        public async Task<IActionResult> UpdateProductImage(int id, ProductImage productImage)
         {
-            if (id != productItem.Id)
+            if (id != productImage.Id)
                 return BadRequest();
 
             try
             {
-                await _productItemRepository.UpdateAsync(productItem);
+                await _productImageRepository.UpdateAsync(productImage);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -116,17 +117,17 @@ namespace lesavrilshop_be.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating productItem {Id}", id);
+                _logger.LogError(ex, "Error updating productImage {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProductItem(int id)
+        public async Task<IActionResult> DeleteProductImage(int id)
         {
             try
             {
-                await _productItemRepository.DeleteAsync(id);
+                await _productImageRepository.DeleteAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -139,7 +140,7 @@ namespace lesavrilshop_be.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting productItem {Id}", id);
+                _logger.LogError(ex, "Error deleting productImage {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }

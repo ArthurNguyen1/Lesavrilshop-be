@@ -2,57 +2,57 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using lesavrilshop_be.Core.DTOs;
+using lesavrilshop_be.Core.DTOs.Products;
 using lesavrilshop_be.Core.Entities.Products;
-using lesavrilshop_be.Core.Interfaces.Repositories;
+using lesavrilshop_be.Core.Interfaces.Repositories.Products;
 using Microsoft.AspNetCore.Mvc;
 
-namespace lesavrilshop_be.Api.Controllers
+namespace lesavrilshop_be.Api.Controllers.Products
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ColorController : ControllerBase
+    public class SizeOptionController : ControllerBase
     {
-        private readonly IColorRepository _colorRepository;
-        private readonly ILogger<ColorController> _logger;
+        private readonly ISizeOptionRepository _sizeOptionRepository;
+        private readonly ILogger<SizeOptionController> _logger;
 
-        public ColorController(
-            IColorRepository colorRepository,
-            ILogger<ColorController> logger)
+        public SizeOptionController(
+            ISizeOptionRepository sizeOptionRepository,
+            ILogger<SizeOptionController> logger)
         {
-            _colorRepository = colorRepository;
+            _sizeOptionRepository = sizeOptionRepository;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Color>>> GetColors()
+        public async Task<ActionResult<IEnumerable<SizeOption>>> GetSizeOptions()
         {
             try
             {
-                var colors = await _colorRepository.GetAllAsync();
-                return Ok(colors);
+                var sizeOptions = await _sizeOptionRepository.GetAllAsync();
+                return Ok(sizeOptions);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving colors");
+                _logger.LogError(ex, "Error retrieving sizeOptions");
                 return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Color>> GetColor(int id)
+        public async Task<ActionResult<SizeOption>> GetSizeOption(int id)
         {
             try
             {
-                var color = await _colorRepository.GetByIdAsync(id);
-                if (color == null)
+                var sizeOption = await _sizeOptionRepository.GetByIdAsync(id);
+                if (sizeOption == null)
                     return NotFound();
 
-                return Ok(color);
+                return Ok(sizeOption);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving color {Id}", id);
+                _logger.LogError(ex, "Error retrieving sizeOption {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -61,20 +61,20 @@ namespace lesavrilshop_be.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Color>> CreateColor(CreateColorDto colorDto)
+        public async Task<ActionResult<SizeOption>> CreateSizeOption(CreateSizeOptionDto sizeOptionDto)
         {
             try
             {
-                var createdColor = await _colorRepository.CreateAsync(colorDto);
+                var createdSizeOption = await _sizeOptionRepository.CreateAsync(sizeOptionDto);
                 
                 return CreatedAtAction(
-                    nameof(GetColor),
-                    new { id = createdColor.Id },
-                    createdColor);
+                    nameof(GetSizeOption),
+                    new { id = createdSizeOption.Id },
+                    createdSizeOption);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating color");
+                _logger.LogError(ex, "Error creating sizeOption");
                 return StatusCode(500, new 
                 { 
                     error = "Internal server error",
@@ -84,14 +84,14 @@ namespace lesavrilshop_be.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateColor(int id, Color color)
+        public async Task<IActionResult> UpdateSizeOption(int id, SizeOption sizeOption)
         {
-            if (id != color.Id)
+            if (id != sizeOption.Id)
                 return BadRequest();
 
             try
             {
-                await _colorRepository.UpdateAsync(color);
+                await _sizeOptionRepository.UpdateAsync(sizeOption);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -100,17 +100,17 @@ namespace lesavrilshop_be.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating color {Id}", id);
+                _logger.LogError(ex, "Error updating sizeOption {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteColor(int id)
+        public async Task<IActionResult> DeleteSizeOption(int id)
         {
             try
             {
-                await _colorRepository.DeleteAsync(id);
+                await _sizeOptionRepository.DeleteAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -123,7 +123,7 @@ namespace lesavrilshop_be.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting color {Id}", id);
+                _logger.LogError(ex, "Error deleting sizeOption {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
         }
