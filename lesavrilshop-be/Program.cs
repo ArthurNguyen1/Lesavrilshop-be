@@ -1,9 +1,12 @@
 using lesavrilshop_be.Application.Services;
-using lesavrilshop_be.Core.Interfaces.Repositories.Products;
 using lesavrilshop_be.Core.Interfaces.Services;
 using lesavrilshop_be.Infrastructure.Data;
-using lesavrilshop_be.Infrastructure.Repositories.Products;
 using Microsoft.EntityFrameworkCore;
+using lesavrilshop_be.Core.Interfaces.Repositories.Products;
+using lesavrilshop_be.Infrastructure.Repositories.Products;
+using lesavrilshop_be.Core.Interfaces.Repositories.Reviews;
+using lesavrilshop_be.Infrastructure.Repositories.Reviews;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,8 @@ builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
 builder.Services.AddScoped<IProductItemRepository, ProductItemRepository>();
 builder.Services.AddScoped<IColorRepository, ColorRepository>();
 builder.Services.AddScoped<ISizeOptionRepository, SizeOptionRepository>();
+
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 
 var app = builder.Build();

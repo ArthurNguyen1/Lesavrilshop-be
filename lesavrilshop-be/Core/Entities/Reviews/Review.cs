@@ -10,20 +10,20 @@ namespace lesavrilshop_be.Core.Entities.Reviews
 {
     public class Review: BaseEntity
     {
-        public int UserId { get; private set; }
-        public int ReviewedProductId { get; private set; }
-        public string Comments { get; private set; }
-        public int Rating { get; private set; }
+        public string Comments { get; set; }
+        public int Rating { get; set; }
+        public int? UserId { get; set; }
+        public int? ReviewedProductId { get; set; }
         
         public virtual ShopUser User { get; set; }
         public virtual Product ReviewedProduct { get; set; }
         
-        public Review(int userId, int reviewedProductId, string comments, int rating)
-        {
-            UserId = userId;
-            ReviewedProductId = reviewedProductId;
+        public Review(string comments, int rating, int? userId = null, int? reviewedProductId = null)
+        {           
             Comments = comments;
             Rating = rating;
+            UserId = userId;
+            ReviewedProductId = reviewedProductId;
         }
     }
 }
