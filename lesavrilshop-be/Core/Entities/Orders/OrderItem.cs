@@ -9,10 +9,10 @@ namespace lesavrilshop_be.Core.Entities.Orders
 {
     public class OrderItem: BaseEntity
     {
-        public int ProductItemId { get; private set; }
-        public int OrderId { get; private set; }
-        public decimal Price { get; private set; }
-        public int Quantity { get; private set; }
+        public int ProductItemId { get; set; }
+        public int OrderId { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
         
         public virtual ProductItem ProductItem { get; set; }
         public virtual ShopOrder Order { get; set; }

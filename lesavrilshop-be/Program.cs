@@ -6,6 +6,8 @@ using lesavrilshop_be.Core.Interfaces.Repositories.Products;
 using lesavrilshop_be.Infrastructure.Repositories.Products;
 using lesavrilshop_be.Core.Interfaces.Repositories.Reviews;
 using lesavrilshop_be.Infrastructure.Repositories.Reviews;
+using lesavrilshop_be.Infrastructure.Repositories.Orders;
+using lesavrilshop_be.Core.Interfaces.Repositories.Orders;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,8 @@ builder.Services.AddScoped<IColorRepository, ColorRepository>();
 builder.Services.AddScoped<ISizeOptionRepository, SizeOptionRepository>();
 
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
 
 var app = builder.Build();
