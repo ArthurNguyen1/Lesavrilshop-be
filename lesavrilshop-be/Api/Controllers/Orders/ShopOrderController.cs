@@ -14,13 +14,16 @@ namespace lesavrilshop_be.Api.Controllers.Orders
     public class ShopOrderController : ControllerBase
     {
         private readonly IShopOrderRepository _ShopOrderRepository;
+        private readonly IOrderItemRepository _OrderItemRepository;
         private readonly ILogger<ShopOrderController> _logger;
 
         public ShopOrderController(
             IShopOrderRepository ShopOrderRepository,
+            IOrderItemRepository OrderItemRepository,
             ILogger<ShopOrderController> logger)
         {
             _ShopOrderRepository = ShopOrderRepository;
+            _OrderItemRepository = OrderItemRepository;
             _logger = logger;
         }
 
@@ -61,12 +64,23 @@ namespace lesavrilshop_be.Api.Controllers.Orders
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ShopOrder>> CreateShopOrder(CreateShopOrderDto ShopOrderDto)
+        public async Task<ActionResult<ShopOrder>> CreateShopOrder(CreateShopOrderDto ShopOrderDto, [FromQuery] List<int> productItemId)
         {
             try
             {
                 var createdShopOrder = await _ShopOrderRepository.CreateAsync(ShopOrderDto);
                 
+                // Create OrderItems associated with this ShopOrder
+                foreach (var id in productItemId)
+                {
+                    var orderItemDto = new CreateOrderItemDto
+                    {
+                        ProductItemId = id,
+                        OrderId = createdShopOrder.Id,
+                    };
+                    await _OrderItemRepository.CreateAsync(orderItemDto);
+                }
+
                 return CreatedAtAction(
                     nameof(GetShopOrder),
                     new { id = createdShopOrder.Id },
