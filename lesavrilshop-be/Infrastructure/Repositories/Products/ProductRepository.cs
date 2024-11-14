@@ -84,5 +84,27 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         {
             return await _context.Products.AnyAsync(p => p.Id == id);
         }
+        public async Task<IEnumerable<Product>> FilterBySizeAsync(string sizeName)
+        {
+            return await _context.Products
+                .Include(p => p.ProductItems)
+                    .ThenInclude(pi => pi.Size)
+                .Where(p => p.ProductItems.Any(pi => pi.Size.SizeName == sizeName))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> FilterByCategoryAsync(int categoryId)
+        {
+            return await _context.Products
+                .Include(p => p.ProductCategories)
+                .Where(p => p.ProductCategories.Any(pc => pc.CategoryId == categoryId))
+                .ToListAsync();
+                // .Include(p => p.ProductItems)  // Includes related ProductItems
+                // .Include(p => p.ProductCategories)
+                //     .ThenInclude(pc => pc.Category) // Includes related Categories through ProductCategory
+                // .Where(p => p.ProductCategories.Any(pc => pc.CategoryId == categoryId))
+                // .ToListAsync();
+        }
+
     }
 }

@@ -140,5 +140,38 @@ namespace lesavrilshop_be.Api.Controllers.Products
                 return StatusCode(500, "Internal server error");
             }
         }
+        
+        [HttpGet("filterBySize")]
+        public async Task<ActionResult<IEnumerable<Product>>> FilterBySize([FromQuery] string sizeName)
+        {
+            if (string.IsNullOrEmpty(sizeName))
+                return BadRequest("Size name must be provided");
+
+            try
+            {
+                var products = await _productRepository.FilterBySizeAsync(sizeName);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error filtering products by size");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("filterByCategory")]
+        public async Task<ActionResult<IEnumerable<Product>>> FilterByCategory([FromQuery] int categoryId)
+        {
+            try
+            {
+                var products = await _productRepository.FilterByCategoryAsync(categoryId);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error filtering products by category");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
