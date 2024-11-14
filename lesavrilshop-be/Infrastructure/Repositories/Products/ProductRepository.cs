@@ -106,5 +106,27 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 // .ToListAsync();
         }
 
+        public async Task<IEnumerable<Product>> GetSortedProductsAsync(string sortBy, bool isAscending = true)
+        {
+            IQueryable<Product> query = _context.Products
+                .Include(p => p.ProductItems)
+                .Include(p => p.Reviews);
+
+            query = (sortBy.ToLower(), isAscending) switch
+            {
+                ("originalprice", true) => query.OrderBy(p => p.ProductItems.Min(pi => pi.OriginalPrice)),
+                ("originalprice", false) => query.OrderByDescending(p => p.ProductItems.Min(pi => pi.OriginalPrice)),
+        
+                ("saleprice", true) => query.OrderBy(p => p.ProductItems.Min(pi => pi.SalePrice)),
+                ("saleprice", false) => query.OrderByDescending(p => p.ProductItems.Min(pi => pi.SalePrice)),
+        
+                ("reviews", true) => query.OrderBy(p => p.RatingAverage),
+                ("reviews", false) => query.OrderByDescending(p => p.RatingAverage),
+
+                _ => query
+            };
+
+            return await query.ToListAsync();
+        }
     }
 }

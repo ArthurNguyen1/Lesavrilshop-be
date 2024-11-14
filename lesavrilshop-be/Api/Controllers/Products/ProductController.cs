@@ -173,5 +173,20 @@ namespace lesavrilshop_be.Api.Controllers.Products
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("sorted-products")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetSortedProducts([FromQuery] string sortBy, [FromQuery] bool isAscending = true)
+        {
+            try
+            {
+                var products = await _productRepository.GetSortedProductsAsync(sortBy, isAscending);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error sorting products by {SortBy} with ascending: {IsAscending}", sortBy, isAscending);
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
