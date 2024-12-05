@@ -188,5 +188,26 @@ namespace lesavrilshop_be.Api.Controllers.Products
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("search-products")]
+        public async Task<ActionResult<IEnumerable<Product>>> SearchProducts([FromQuery] string? keyword = null)
+        {
+            try
+            {
+                var products = await _productRepository.SearchProductsAsync(keyword);
+
+                if (!products.Any())
+                {
+                    return NotFound("No products found.");
+                }
+
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching products with keyword: {Keyword}", keyword);
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

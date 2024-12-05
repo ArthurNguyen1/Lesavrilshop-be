@@ -128,5 +128,21 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
 
             return await query.ToListAsync();
         }
+
+        public async Task<IEnumerable<Product>> SearchProductsAsync(string? keyword = null)
+        {
+            var query = _context.Products
+                .Include(p => p.ProductItems)
+                .Include(p => p.Reviews)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(keyword));
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

@@ -18,5 +18,6 @@ namespace lesavrilshop_be.Core.Interfaces.Repositories.Products
         Task<IEnumerable<Product>> FilterBySizeAsync(string sizeName);
         Task<IEnumerable<Product>> FilterByCategoryAsync(int categoryId);
         Task<IEnumerable<Product>> GetSortedProductsAsync(string sortBy, bool isAscending = true);
+        Task<IEnumerable<Product>> SearchProductsAsync(string keyword);
     }
 }
