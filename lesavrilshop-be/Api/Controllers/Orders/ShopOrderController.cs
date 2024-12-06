@@ -16,15 +16,18 @@ namespace lesavrilshop_be.Api.Controllers.Orders
         private readonly IShopOrderRepository _ShopOrderRepository;
         private readonly IOrderItemRepository _OrderItemRepository;
         private readonly ILogger<ShopOrderController> _logger;
+        private readonly IConfiguration _config;
 
         public ShopOrderController(
             IShopOrderRepository ShopOrderRepository,
             IOrderItemRepository OrderItemRepository,
-            ILogger<ShopOrderController> logger)
+            ILogger<ShopOrderController> logger,
+            IConfiguration config)
         {
             _ShopOrderRepository = ShopOrderRepository;
             _OrderItemRepository = OrderItemRepository;
             _logger = logger;
+            _config = config;;
         }
 
         [HttpGet]
@@ -140,6 +143,19 @@ namespace lesavrilshop_be.Api.Controllers.Orders
                 _logger.LogError(ex, "Error deleting ShopOrder {Id}", id);
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        [HttpPost("{id}/pay/stripe")]
+        public async Task<IActionResult> PayWithStripe(int id)
+        {
+            var order = await _ShopOrderRepository.GetByIdAsync(id);
+            if (order == null) return NotFound("Order not found");
+
+            if (order.OrderStatusId == 2) // assume that StatusId 2 is Paid
+                return BadRequest("Order is already paid.");
+
+            var clientSecret = await _ShopOrderRepository.CreateStripePaymentAsync(order);
+            return Ok(new { clientSecret });
         }
     }
 }
