@@ -17,6 +17,7 @@ namespace lesavrilshop_be.Infrastructure.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         public DbSet<Product> Products { get; set; }
@@ -74,7 +75,7 @@ namespace lesavrilshop_be.Infrastructure.Data
             var entries = ChangeTracker
                 .Entries()
                 .Where(e => e.Entity is BaseEntity && (
-                    e.State == EntityState.Added || 
+                    e.State == EntityState.Added ||
                     e.State == EntityState.Modified));
 
             foreach (var entityEntry in entries)
