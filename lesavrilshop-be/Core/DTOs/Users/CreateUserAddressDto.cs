@@ -2,18 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using lesavrilshop_be.Core.Common;
 
-namespace lesavrilshop_be.Core.Entities.Users
+namespace lesavrilshop_be.Core.DTOs.Users
 {
-    public class Address : BaseEntity
+    public class CreateUserAddressDto
     {
-        public int UserId { get; set; }
+        public string Customer { get; set; } = default!;
+        public string PhoneNumber { get; set; } = default!;
         public string DetailedAddress { get; set; } = default!;
         public string District { get; set; } = default!;
         public string City { get; set; } = default!;
         public string Country { get; set; } = default!;
-
-        public ICollection<UserAddress> UserAddresses { get; set; } = [];
+        public bool IsDefault { get; set; }
     }
 }

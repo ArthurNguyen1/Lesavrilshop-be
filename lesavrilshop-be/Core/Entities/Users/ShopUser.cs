@@ -23,10 +23,10 @@ namespace lesavrilshop_be.Core.Entities.Users
         public string Username { get; set; } = default!;
         public DateTime? Birthday { get; set; }
         public string? Avatar { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public string Role { get; set; } = "Customer";
 
-        public ICollection<Address> Addresses { get; set; } = [];
+        public ICollection<UserAddress> UserAddresses { get; set; } = [];
         public ICollection<ShopOrder> Orders { get; set; } = [];
         public ICollection<Review> Reviews { get; set; } = [];
         public Cart? Cart { get; set; }

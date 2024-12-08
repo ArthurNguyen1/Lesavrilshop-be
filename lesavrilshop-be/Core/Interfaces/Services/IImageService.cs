@@ -6,5 +6,7 @@ namespace lesavrilshop_be.Core.Interfaces.Services
     {
         Task<ImageUploadResult> AddImageAsync(IFormFile file);
         Task<DeletionResult> DeleteImageAsync(string id);
+
+        Task<string> UploadImageAsync(IFormFile file, string folder);
     }
 }

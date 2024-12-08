@@ -55,8 +55,8 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
 
             // Audit properties
             builder.Property(u => u.CreatedAt)
-            .IsRequired()
-            .HasColumnType("timestamp with time zone");
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
 
             builder.Property(u => u.UpdatedAt)
                 .IsRequired()
@@ -73,9 +73,9 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(u => u.Addresses)
-                .WithOne(a => a.User)
-                .HasForeignKey(a => a.UserId)
+            builder.HasMany(u => u.UserAddresses)
+                .WithOne(ua => ua.User)
+                .HasForeignKey(ua => ua.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(u => u.Cart)
