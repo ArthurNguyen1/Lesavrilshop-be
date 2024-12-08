@@ -15,5 +15,6 @@ namespace lesavrilshop_be.Core.Interfaces.Repositories.Orders
         Task UpdateAsync(ShopOrder ShopOrder);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
+        Task<string> CreateStripePaymentAsync(ShopOrder order);
     }
 }

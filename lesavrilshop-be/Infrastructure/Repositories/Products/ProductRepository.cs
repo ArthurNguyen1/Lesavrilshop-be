@@ -84,5 +84,65 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         {
             return await _context.Products.AnyAsync(p => p.Id == id);
         }
+        public async Task<IEnumerable<Product>> FilterBySizeAsync(string sizeName)
+        {
+            return await _context.Products
+                .Include(p => p.ProductItems)
+                    .ThenInclude(pi => pi.Size)
+                .Where(p => p.ProductItems.Any(pi => pi.Size.SizeName == sizeName))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> FilterByCategoryAsync(int categoryId)
+        {
+            return await _context.Products
+                .Include(p => p.ProductCategories)
+                .Where(p => p.ProductCategories.Any(pc => pc.CategoryId == categoryId))
+                .ToListAsync();
+                // .Include(p => p.ProductItems)  // Includes related ProductItems
+                // .Include(p => p.ProductCategories)
+                //     .ThenInclude(pc => pc.Category) // Includes related Categories through ProductCategory
+                // .Where(p => p.ProductCategories.Any(pc => pc.CategoryId == categoryId))
+                // .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetSortedProductsAsync(string sortBy, bool isAscending = true)
+        {
+            IQueryable<Product> query = _context.Products
+                .Include(p => p.ProductItems)
+                .Include(p => p.Reviews);
+
+            query = (sortBy.ToLower(), isAscending) switch
+            {
+                ("originalprice", true) => query.OrderBy(p => p.ProductItems.Min(pi => pi.OriginalPrice)),
+                ("originalprice", false) => query.OrderByDescending(p => p.ProductItems.Min(pi => pi.OriginalPrice)),
+        
+                ("saleprice", true) => query.OrderBy(p => p.ProductItems.Min(pi => pi.SalePrice)),
+                ("saleprice", false) => query.OrderByDescending(p => p.ProductItems.Min(pi => pi.SalePrice)),
+        
+                ("reviews", true) => query.OrderBy(p => p.RatingAverage),
+                ("reviews", false) => query.OrderByDescending(p => p.RatingAverage),
+
+                _ => query
+            };
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> SearchProductsAsync(string? keyword = null)
+        {
+            var query = _context.Products
+                .Include(p => p.ProductItems)
+                .Include(p => p.Reviews)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(keyword));
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

@@ -7,6 +7,7 @@ using lesavrilshop_be.Core.Entities.Orders;
 using lesavrilshop_be.Core.Interfaces.Repositories.Orders;
 using lesavrilshop_be.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace lesavrilshop_be.Infrastructure.Repositories.Orders
 {
@@ -88,6 +89,24 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Orders
         public async Task<bool> ExistsAsync(int id)
         {
             return await _context.Orders.AnyAsync(o => o.Id == id);
+        }
+
+        public async Task<string> CreateStripePaymentAsync(ShopOrder order)
+        {
+            var options = new PaymentIntentCreateOptions
+            {
+                Amount = (long)(order.TotalPrice * 1000),
+                Currency = "vnd",
+                PaymentMethodTypes = new List<string> { "card" },
+            };
+
+            var service = new PaymentIntentService();
+            var paymentIntent = await service.CreateAsync(options);
+
+            order.UpdateStatus(2); // Update status to "Paid" (Assuming id 2 is Paid)
+            await _context.SaveChangesAsync();
+
+            return paymentIntent.ClientSecret;
         }
     }
 }

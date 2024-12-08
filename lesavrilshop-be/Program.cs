@@ -8,7 +8,7 @@ using lesavrilshop_be.Core.Interfaces.Repositories.Reviews;
 using lesavrilshop_be.Infrastructure.Repositories.Reviews;
 using lesavrilshop_be.Infrastructure.Repositories.Orders;
 using lesavrilshop_be.Core.Interfaces.Repositories.Orders;
-
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +44,7 @@ builder.Services.AddScoped<IOrderStatusRepository, OrderStatusRepository>();
 builder.Services.AddScoped<IShippingMethodRepository, ShippingMethodRepository>();
 builder.Services.AddScoped<IShopOrderRepository, ShopOrderRepository>();
 
-
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 var app = builder.Build();
 
