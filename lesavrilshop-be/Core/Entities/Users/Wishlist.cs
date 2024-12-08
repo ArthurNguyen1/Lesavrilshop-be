@@ -7,18 +7,12 @@ using lesavrilshop_be.Core.Entities.Products;
 
 namespace lesavrilshop_be.Core.Entities.Users
 {
-    public class Wishlist: BaseEntity
+    public class Wishlist : BaseEntity
     {
-        public int UserId { get; private set; }
-        public int ProductId { get; private set; }
-        
-        public virtual ShopUser User { get; set; }
-        public virtual Product Product { get; set; }
-        
-        public Wishlist(int userId, int productId)
-        {
-            UserId = userId;
-            ProductId = productId;
-        }
+        public int UserId { get; set; }
+        public int ProductId { get; set; }
+
+        public virtual ShopUser User { get; set; } = default!;
+        public virtual Product Product { get; set; } = default!;
     }
 }

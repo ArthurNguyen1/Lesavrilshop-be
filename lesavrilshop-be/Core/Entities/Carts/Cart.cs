@@ -7,17 +7,12 @@ using lesavrilshop_be.Core.Entities.Users;
 
 namespace lesavrilshop_be.Core.Entities.Carts
 {
-    public class Cart: BaseEntity
+    public class Cart : BaseEntity
     {
-        public int UserId { get; private set; }
-        
-        public virtual ShopUser User { get; set; }
-        public virtual ICollection<CartItem> CartItems { get; private set; }
-        
-        public Cart(int userId)
-        {
-            UserId = userId;
-            CartItems = new List<CartItem>();
-        }
+        public int UserId { get; set; }
+
+        public virtual ShopUser User { get; set; } = default!;
+        public virtual ICollection<CartItem> CartItems { get; set; } = [];
+
     }
 }

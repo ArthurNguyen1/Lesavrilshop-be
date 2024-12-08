@@ -7,8 +7,6 @@ namespace lesavrilshop_be.Core.DTOs.User
 {
     public class UserDto
     {
-
-
         public long Id { get; set; }
         public string Email { get; set; } = default!;
         public string Username { get; set; } = default!;

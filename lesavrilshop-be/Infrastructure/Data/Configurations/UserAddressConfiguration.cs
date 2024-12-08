@@ -12,29 +12,46 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<UserAddress> builder)
         {
-            // Table name
+            // Table configuration
             builder.ToTable("user_address");
 
-            // Primary key
-            builder.HasKey(ua => new { ua.UserId, ua.AddressId });
-
             // Properties
-            builder.Property(ua => ua.UserId)
-                .IsRequired();
+            builder.Property(ua => ua.Customer)
+                .IsRequired()
+                .HasMaxLength(255);
 
-            builder.Property(ua => ua.AddressId)
-                .IsRequired();
+            builder.Property(ua => ua.PhoneNumber)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            builder.Property(ua => ua.IsDefault)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            // Audit properties
+            builder.Property(ua => ua.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
+
+            builder.Property(ua => ua.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
 
             // Relationships
             builder.HasOne(ua => ua.User)
-                .WithMany()
+                .WithMany(u => u.UserAddresses)
                 .HasForeignKey(ua => ua.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(ua => ua.Address)
-                .WithMany()
+                .WithMany(a => a.UserAddresses)
                 .HasForeignKey(ua => ua.AddressId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Ensure only one default address per user
+            builder.HasIndex(ua => new { ua.UserId, ua.IsDefault })
+                .HasFilter("\"IsDefault\" = true")
+                .IsUnique();
         }
     }
 }
