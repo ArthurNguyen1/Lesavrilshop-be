@@ -10,13 +10,10 @@ namespace lesavrilshop_be.Core.DTOs.Products
     {
         [Required]
         public decimal OriginalPrice { get; set; }
-
-        [Required]
         public decimal SalePrice { get; set; }
 
         [Required]
         public int QuantityInStock { get; set; }
-
         public int? ProductId { get; set; }
 
         public int? ColorId { get; set; }

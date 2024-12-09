@@ -33,6 +33,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         {
             var productImage = new ProductImage(
                 productImageDto.ImageUrl,
+                productImageDto.IsMain,
                 productImageDto.ProductItemId
             )
             {
@@ -54,6 +55,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
 
             existingProductImage.ProductItemId =  productImage.ProductItemId;
             existingProductImage.ImageUrl = productImage.ImageUrl;
+            existingProductImage.IsMain = productImage.IsMain;
             existingProductImage.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

@@ -9,14 +9,14 @@ namespace lesavrilshop_be.Core.DTOs.Products
     public class CreateProductDto
     {
         [Required]
-        [StringLength(100)]
+        [MaxLength(200)]
         public string Name { get; set; }
 
         [Required]
         public string ProductDescription { get; set; }
 
         [Required]
-        public string DeliveryDescription { get; set; }
+        public string? DeliveryDescription { get; set; }
 
         public int? ParentCategoryId { get; set; }
     }

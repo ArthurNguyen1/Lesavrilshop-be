@@ -65,6 +65,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             existingProduct.ProductDescription = product.ProductDescription;
             existingProduct.DeliveryDescription = product.DeliveryDescription;
             existingProduct.ParentCategoryId = product.ParentCategoryId;
+            existingProduct.IsActive = product.IsActive;
             existingProduct.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
