@@ -45,6 +45,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 productItemDto.SizeId
             )
             {
+                SKU = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
