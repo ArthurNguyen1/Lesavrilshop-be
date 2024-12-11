@@ -192,54 +192,26 @@ namespace lesavrilshop_be.Api.Controllers.Products
                 return StatusCode(500, "Internal server error");
             }
         }
-        
-        [HttpGet("filterBySize")]
-        public async Task<ActionResult<IEnumerable<Product>>> FilterBySize([FromQuery] string sizeName)
-        {
-            if (string.IsNullOrEmpty(sizeName))
-                return BadRequest("Size name must be provided");
 
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterAndSortProducts(
+            [FromQuery] int? sizeId,
+            [FromQuery] int? colorId,
+            [FromQuery] int? categoryId,
+            [FromQuery] string? sortOrder = "name")
+        {
             try
             {
-                var products = await _productRepository.FilterBySizeAsync(sizeName);
+                var products = await _productRepository.GetFilterAndSortedProductsAsync(sizeId, colorId, categoryId, sortOrder);
                 return Ok(products);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error filtering products by size");
+                _logger.LogError(ex, "Error filter products");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpGet("filterByCategory")]
-        public async Task<ActionResult<IEnumerable<Product>>> FilterByCategory([FromQuery] int categoryId)
-        {
-            try
-            {
-                var products = await _productRepository.FilterByCategoryAsync(categoryId);
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error filtering products by category");
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-        [HttpGet("sorted-products")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetSortedProducts([FromQuery] string sortBy, [FromQuery] bool isAscending = true)
-        {
-            try
-            {
-                var products = await _productRepository.GetSortedProductsAsync(sortBy, isAscending);
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error sorting products by {SortBy} with ascending: {IsAscending}", sortBy, isAscending);
-                return StatusCode(500, "Internal server error");
-            }
-        }
 
         [HttpGet("search-products")]
         public async Task<ActionResult<IEnumerable<Product>>> SearchProducts([FromQuery] string? keyword = null)
