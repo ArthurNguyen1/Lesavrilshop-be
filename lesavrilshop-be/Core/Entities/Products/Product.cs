@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using lesavrilshop_be.Core.Common;
@@ -9,12 +10,18 @@ namespace lesavrilshop_be.Core.Entities.Products
 {
     public class Product: BaseEntity
     {
-        public string Name { get; set; }
-        public string ProductDescription { get; set; }
-        public string DeliveryDescription { get; set; }
+        [Required]
+        [MaxLength(200)]
+        public string Name { get; set; } = default!;
+        
+        [Required]
+        public string ProductDescription { get; set; } = default!;
+        
+        public string? DeliveryDescription { get; set; }
         public int? ParentCategoryId { get; set; }
         public decimal RatingAverage { get; set; }
         public int RatingQuantity { get; set; }
+        public bool IsActive { get; set; } = true;
         public DateTime? DeletedAt { get; set; }
         
         public virtual Category ParentCategory { get; set; }
