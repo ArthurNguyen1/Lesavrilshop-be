@@ -198,11 +198,12 @@ namespace lesavrilshop_be.Api.Controllers.Products
             [FromQuery] int? sizeId,
             [FromQuery] int? colorId,
             [FromQuery] int? categoryId,
-            [FromQuery] string? sortOrder = "name")
+            [FromQuery] string? sortOrder = "name",
+            [FromQuery] string? keyword = null)
         {
             try
             {
-                var products = await _productRepository.GetFilterAndSortedProductsAsync(sizeId, colorId, categoryId, sortOrder);
+                var products = await _productRepository.GetFilterAndSortedProductsAsync(sizeId, colorId, categoryId, sortOrder, keyword);
                 return Ok(products);
             }
             catch (Exception ex)

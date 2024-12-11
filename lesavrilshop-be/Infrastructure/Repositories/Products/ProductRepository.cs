@@ -86,7 +86,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             return await _context.Products.AnyAsync(p => p.Id == id);
         }
 
-        public async Task<IEnumerable<Product>> GetFilterAndSortedProductsAsync(int? sizeId, int? colorId, int? categoryId, string? sortOrder = "name")
+        public async Task<IEnumerable<Product>> GetFilterAndSortedProductsAsync(int? sizeId, int? colorId, int? categoryId, string? sortOrder = "name", string? keyword = null)
         {
             var query = _context.Products.AsQueryable();
 
@@ -105,7 +105,14 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 query = query.Where(p => p.ProductItems.Any(pi => pi.ColorId == colorId.Value));
             }
 
-            query = sortOrder.ToLower() switch
+            // Apply search keyword
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(keyword));
+            }
+
+            query = sortOrder?.ToLower() switch
             {
                 "price_asc" => query.OrderBy(p => p.ProductItems.Min(pi => pi.SalePrice)),
                 "price_desc" => query.OrderByDescending(p => p.ProductItems.Max(pi => pi.SalePrice)),
@@ -114,9 +121,9 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             };
 
             return await query.Include(p => p.ProductItems)
-                                    .ThenInclude(pi => pi.Images)
-                                    .Include(p => p.ParentCategory)
-                                    .ToListAsync();
+                              .ThenInclude(pi => pi.Images)
+                              .Include(p => p.ParentCategory)
+                              .ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> SearchProductsAsync(string? keyword = null)

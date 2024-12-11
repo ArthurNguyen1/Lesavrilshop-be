@@ -15,7 +15,7 @@ namespace lesavrilshop_be.Core.Interfaces.Repositories.Products
         Task UpdateAsync(Product product);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
-        Task<IEnumerable<Product>> GetFilterAndSortedProductsAsync(int? sizeId, int? colorId, int? categoryId, string? sortOrder = "name");
+        Task<IEnumerable<Product>> GetFilterAndSortedProductsAsync(int? sizeId, int? colorId, int? categoryId, string? sortOrder = "name", string? keyword = null);
         Task<IEnumerable<Product>> SearchProductsAsync(string keyword);
     }
 }
