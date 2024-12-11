@@ -72,5 +72,17 @@ namespace lesavrilshop_be.Api.Controllers.Users
 
             return Ok(result);
         }
+
+        [HttpGet("{addressId}")]
+        public async Task<ActionResult<UserAddressDto>> GetAddress(int addressId)
+        {
+            var userId = _currentUserService.GetUserId();
+            var address = await _addressService.GetUserAddressByIdAsync(userId, addressId);
+
+            if (address == null)
+                return NotFound();
+
+            return Ok(address);
+        }
     }
 }

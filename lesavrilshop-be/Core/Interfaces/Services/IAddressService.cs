@@ -14,5 +14,8 @@ namespace lesavrilshop_be.Core.Interfaces.Services
         Task<bool> DeleteUserAddressAsync(int userId, int addressId);
         Task<UserAddressDto?> UpdateUserAddressAsync(int userId, int addressId, UpdateUserAddressDto dto);
 
+        Task<UserAddressDto?> GetUserAddressByIdAsync(int userId, int addressId);
+
+
     }
 }

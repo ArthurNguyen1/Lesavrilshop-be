@@ -131,5 +131,22 @@ namespace lesavrilshop_be.Application.Services
                 ua.UserId == userId && ua.AddressId == addressId);
             return _mapper.Map<UserAddressDto>(result);
         }
+
+        public async Task<UserAddressDto?> GetUserAddressByIdAsync(int userId, int addressId)
+        {
+            var userAddress = await _userAddressRepository.FindAsync(ua =>
+                ua.UserId == userId &&
+                ua.AddressId == addressId);
+
+            if (userAddress == null)
+                return null;
+
+            var address = await _addressRepository.GetByIdAsync(addressId);
+            if (address == null)
+                return null;
+
+            userAddress.Address = address;
+            return _mapper.Map<UserAddressDto>(userAddress);
+        }
     }
 }
