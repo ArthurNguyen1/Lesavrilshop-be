@@ -13,33 +13,34 @@ namespace lesavrilshop_be.Core.Entities.Products
         [Required]
         [MaxLength(200)]
         public string Name { get; set; } = default!;
-        
+
         [Required]
         public string ProductDescription { get; set; } = default!;
-        
+
         public string? DeliveryDescription { get; set; }
-        public int? ParentCategoryId { get; set; }
         public decimal RatingAverage { get; set; }
         public int RatingQuantity { get; set; }
         public bool IsActive { get; set; } = true;
+
+        public ICollection<string> Colors { get; set; }
+        public ICollection<string> Sizes { get; set; }
         public DateTime? DeletedAt { get; set; }
-        
-        public virtual Category ParentCategory { get; set; }
-        public virtual ICollection<ProductItem> ProductItems { get; set; }
+        public ICollection<ProductCategory> ProductCategories { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
-        public virtual ICollection<ProductCategory> ProductCategories { get; set; }
+        public virtual ICollection<ProductImage> Images { get; set; }
         
-        public Product(string name, string productDescription, string deliveryDescription, int? parentCategoryId = null)
+        public Product(string name, string productDescription, string deliveryDescription)
         {
             Name = name;
             ProductDescription = productDescription;
             DeliveryDescription = deliveryDescription;
-            ParentCategoryId = parentCategoryId;
             RatingAverage = 0;
             RatingQuantity = 0;
-            ProductItems = new List<ProductItem>();
-            Reviews = new List<Review>();
+            Colors = new List<string>();
+            Sizes = new List<string>();
             ProductCategories = new List<ProductCategory>();
+            Reviews = new List<Review>();
+            Images = new List<ProductImage>();
         }
 
         public void UpdateRating(decimal rating)

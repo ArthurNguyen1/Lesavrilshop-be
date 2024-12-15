@@ -34,7 +34,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             var productImage = new ProductImage(
                 productImageDto.ImageUrl,
                 productImageDto.IsMain,
-                productImageDto.ProductItemId
+                productImageDto.ProductId
             )
             {
                 CreatedAt = DateTime.UtcNow,
@@ -53,7 +53,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             if (existingProductImage == null)
                 throw new KeyNotFoundException($"ProductImage with ID {productImage.Id} not found");
 
-            existingProductImage.ProductItemId =  productImage.ProductItemId;
+            existingProductImage.ProductId =  productImage.ProductId;
             existingProductImage.ImageUrl = productImage.ImageUrl;
             existingProductImage.IsMain = productImage.IsMain;
             existingProductImage.UpdatedAt = DateTime.UtcNow;

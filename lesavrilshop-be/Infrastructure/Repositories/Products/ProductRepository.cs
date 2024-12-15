@@ -22,7 +22,6 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
             return await _context.Products
-                .Include(p => p.ProductItems)
                 .Include(p => p.ProductCategories)
                 .ToListAsync();
                 
@@ -31,7 +30,6 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         public async Task<Product> GetByIdAsync(int id)
         {
             return await _context.Products
-                .Include(p => p.ProductItems)
                 .Include(p => p.ProductCategories)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
@@ -41,8 +39,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             var product = new Product(
                 productDto.Name,
                 productDto.ProductDescription,
-                productDto.DeliveryDescription,
-                productDto.ParentCategoryId
+                productDto.DeliveryDescription
             )
             {
                 CreatedAt = DateTime.UtcNow,
@@ -64,7 +61,6 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             existingProduct.Name = product.Name;
             existingProduct.ProductDescription = product.ProductDescription;
             existingProduct.DeliveryDescription = product.DeliveryDescription;
-            existingProduct.ParentCategoryId = product.ParentCategoryId;
             existingProduct.IsActive = product.IsActive;
             existingProduct.UpdatedAt = DateTime.UtcNow;
 
@@ -88,21 +84,29 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
 
         public async Task<IEnumerable<Product>> GetFilterAndSortedProductsAsync(int? sizeId, int? colorId, int? categoryId, string? sortOrder = "name", string? keyword = null)
         {
-            var query = _context.Products.AsQueryable();
-
+            var query = _context.Products
+                    .Include(p => p.Images)
+                    .Include(p => p.ProductCategories)
+                    .AsQueryable();
+                    
+            // Filter by category
             if (categoryId.HasValue)
             {
-                query = query.Where(p => p.ParentCategoryId == categoryId.Value);
+                query = query.Where(p => p.ProductCategories.Any(pc => pc.CategoryId == categoryId.Value));
             }
 
+            // Filter by size
             if (sizeId.HasValue)
             {
-                query = query.Where(p => p.ProductItems.Any(pi => pi.SizeId == sizeId.Value));
+                query = query.Where(p => p.Sizes.Contains(sizeId.Value.ToString()));
+                //query = query.Where(p => p.Sizes.Any(s => s.Id == sizeId.Value));
             }
 
+            // Filter by color
             if (colorId.HasValue)
             {
-                query = query.Where(p => p.ProductItems.Any(pi => pi.ColorId == colorId.Value));
+                query = query.Where(p => p.Colors.Contains(colorId.Value.ToString()));
+                //query = query.Where(p => p.Colors.Any(c => c.Id == colorId.Value));
             }
 
             // Apply search keyword
@@ -112,24 +116,22 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 query = query.Where(p => p.Name.ToLower().Contains(keyword));
             }
 
+            // Sorting
             query = sortOrder?.ToLower() switch
             {
-                "price_asc" => query.OrderBy(p => p.ProductItems.Min(pi => pi.SalePrice)),
-                "price_desc" => query.OrderByDescending(p => p.ProductItems.Max(pi => pi.SalePrice)),
-                "name" => query.OrderBy(p => p.Name),
-                _ => query.OrderBy(p => p.Name)
+                "rating_desc" => query.OrderByDescending(p => p.RatingAverage),
+                "rating_asc" => query.OrderBy(p => p.RatingAverage),
+                "name_desc" => query.OrderByDescending(p => p.Name),
+                _ => query.OrderBy(p => p.Name) // Default to sorting by name
             };
 
-            return await query.Include(p => p.ProductItems)
-                              .ThenInclude(pi => pi.Images)
-                              .Include(p => p.ParentCategory)
-                              .ToListAsync();
+            return await query.ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> SearchProductsAsync(string? keyword = null)
         {
             var query = _context.Products
-                .Include(p => p.ProductItems)
+                .Include(p => p.Images)
                 .Include(p => p.Reviews)
                 .AsQueryable();
 

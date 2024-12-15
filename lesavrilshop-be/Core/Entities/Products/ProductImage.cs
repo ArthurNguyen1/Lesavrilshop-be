@@ -9,19 +9,20 @@ namespace lesavrilshop_be.Core.Entities.Products
 {
     public class ProductImage: BaseEntity
     {
-        public int? ProductItemId { get; set; }
+        public int? ProductId { get; set; }
 
         [Required]
         public string ImageUrl { get; set; } = default!;
         public bool IsMain { get; set; }
+        public virtual Product Product { get; set; }
+
+        //public virtual ProductItem ProductItem { get; set; }
         
-        public virtual ProductItem ProductItem { get; set; }
-        
-        public ProductImage(string imageUrl, bool isMain, int? productItemId = null)
+        public ProductImage(string imageUrl, bool isMain, int? productId = null)
         {
             ImageUrl = imageUrl;
             IsMain = isMain;
-            ProductItemId = productItemId;
+            ProductId = productId;
         }
     }
 }

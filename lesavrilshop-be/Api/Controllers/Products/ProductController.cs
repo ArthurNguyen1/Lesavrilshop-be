@@ -123,7 +123,7 @@ namespace lesavrilshop_be.Api.Controllers.Products
 
                 var createProductImageDto = new CreateProductImageDto
                 {
-                    ProductItemId = createdProductItem.Id,
+                    ProductId = createdProductItem.Id,
                     ImageUrl = uploadedImageUrl,
                     IsMain = true
                 };

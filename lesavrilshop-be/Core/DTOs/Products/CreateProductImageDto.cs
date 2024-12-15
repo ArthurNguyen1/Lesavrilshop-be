@@ -8,7 +8,7 @@ namespace lesavrilshop_be.Core.DTOs.Products
 {
     public class CreateProductImageDto
     {
-        public int? ProductItemId { get; set; }
+        public int? ProductId { get; set; }
 
         [Required]
         public string ImageUrl { get; set; } = default!;

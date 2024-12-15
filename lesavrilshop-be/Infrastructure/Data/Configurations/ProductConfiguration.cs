@@ -13,21 +13,51 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.ToTable("product");
-            
+
+
+
             builder.Property(p => p.Name)
                 .IsRequired()
-                .HasMaxLength(255);
-                
+                .HasMaxLength(200);
+
             builder.Property(p => p.ProductDescription)
                 .IsRequired();
-                
+
+            builder.Property(p => p.DeliveryDescription);
+
             builder.Property(p => p.RatingAverage)
-                .HasPrecision(3, 2);
-                
-            builder.HasMany(p => p.ProductItems)
-                .WithOne(pi => pi.Product)
-                .HasForeignKey(pi => pi.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasDefaultValue(0);
+
+            builder.Property(p => p.RatingQuantity)
+                .HasDefaultValue(0);
+
+            builder.Property(p => p.IsActive)
+                .HasDefaultValue(true);
+
+            builder.Property(p => p.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
+
+            builder.Property(p => p.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
+
+            // Configure relationships
+            builder.HasMany(p => p.ProductCategories)
+                .WithOne(pc => pc.Product)
+                .HasForeignKey(pc => pc.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property(p => p.Colors);
+                //.HasDefaultValue("[]");
+
+            builder.Property(p => p.Sizes);
+                //.HasDefaultValue("[]");
+
+            builder.HasMany(p => p.Images)
+                .WithOne(i => i.Product)
+                .HasForeignKey(i => i.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

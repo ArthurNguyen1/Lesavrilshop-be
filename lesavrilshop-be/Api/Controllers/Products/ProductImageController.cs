@@ -72,9 +72,9 @@ namespace lesavrilshop_be.Api.Controllers.Products
         {
             try
             {
-                if (productImageDto.ProductItemId.HasValue)
+                if (productImageDto.ProductId.HasValue)
                 {
-                    var parentExists = await _productItemRepository.ExistsAsync(productImageDto.ProductItemId.Value);
+                    var parentExists = await _productItemRepository.ExistsAsync(productImageDto.ProductId.Value);
                     if (!parentExists)
                     {
                         return BadRequest(new 
