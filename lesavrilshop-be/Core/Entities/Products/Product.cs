@@ -22,8 +22,20 @@ namespace lesavrilshop_be.Core.Entities.Products
         public int RatingQuantity { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public ICollection<string> Colors { get; set; }
-        public ICollection<string> Sizes { get; set; }
+        private string _colors;
+        private string _sizes;
+
+        public List<string> Colors
+        {
+            get => _colors?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>();
+            set => _colors = string.Join(",", value);
+        }
+
+        public List<string> Sizes
+        {
+            get => _sizes?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>();
+            set => _sizes = string.Join(",", value);
+        }
         public DateTime? DeletedAt { get; set; }
         public ICollection<ProductCategory> ProductCategories { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }

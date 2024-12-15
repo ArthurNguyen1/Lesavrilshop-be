@@ -48,10 +48,12 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
                 .HasForeignKey(pc => pc.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(p => p.Colors);
+            builder.Property(p => p.Colors)
+                .HasColumnType("text");
                 //.HasDefaultValue("[]");
 
-            builder.Property(p => p.Sizes);
+            builder.Property(p => p.Sizes)
+                .HasColumnType("text");
                 //.HasDefaultValue("[]");
 
             builder.HasMany(p => p.Images)
