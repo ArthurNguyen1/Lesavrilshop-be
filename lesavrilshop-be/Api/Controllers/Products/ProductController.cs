@@ -78,56 +78,35 @@ namespace lesavrilshop_be.Api.Controllers.Products
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Product>> CreateProduct([FromForm] CreateProductDto createProductDTO,  IFormFile? mainImage)
+        public async Task<ActionResult<Product>> CreateProduct([FromForm] CreateProductDto createProductDTO,  List<IFormFile> images)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                if (createProductDTO.ParentCategoryId.HasValue)
-                {
-                    var parentExists = await _productRepository.ExistsAsync(createProductDTO.ParentCategoryId.Value);
-                    if (!parentExists)
-                    {
-                        return BadRequest(new 
-                        { 
-                            error = "Parent category does not exist",
-                            code = "INVALID_PARENT_CATEGORY"
-                        });
-                    }
-                }
-
-                // Handle image upload if provided
-                string? uploadedImageUrl = null;
-                if (mainImage != null && mainImage.Length > 0)
-                {
-                    var uploadResult = await _imageService.AddImageAsync(mainImage);
-                    if (uploadResult == null)
-                        return BadRequest("Image upload failed");
-                    uploadedImageUrl = uploadResult.SecureUrl.AbsoluteUri;
-                }
-
                 // Create the product entity
                 var createdProduct = await _productRepository.CreateAsync(createProductDTO);
 
-                // Create product item entity
-                var createProductItemDto = new CreateProductItemDto
+                // Create the image 
+                foreach(var image in images)
                 {
-                    OriginalPrice = createProductDTO.OriginalPrice,
-                    SalePrice = createProductDTO.SalePrice,
-                    QuantityInStock = createProductDTO.QuantityInStock,
-                    ProductId = createdProduct.Id,
-                    ColorId = createProductDTO.ColorId,
-                    SizeId = createProductDTO.SizeId,
-                };
-                var createdProductItem = await _productItemRepository.CreateAsync(createProductItemDto);
+                    // Handle image upload if provided
+                    string? uploadedImageUrl = null;
+                    if (image != null && image.Length > 0)
+                    {
+                        var uploadResult = await _imageService.AddImageAsync(image);
+                        if (uploadResult == null)
+                            return BadRequest("Image upload failed");
+                        uploadedImageUrl = uploadResult.SecureUrl.AbsoluteUri;
+                    }
 
-                var createProductImageDto = new CreateProductImageDto
-                {
-                    ProductId = createdProductItem.Id,
-                    ImageUrl = uploadedImageUrl,
-                    IsMain = true
-                };
-                await _productImageRepository.CreateAsync(createProductImageDto);
+                    var createProductImageDto = new CreateProductImageDto
+                    {
+                        ProductId = createdProduct.Id,
+                        ImageUrl = uploadedImageUrl,
+                        IsMain = true
+                    };
+                    await _productImageRepository.CreateAsync(createProductImageDto);
+                }
 
                 await transaction.CommitAsync();
 

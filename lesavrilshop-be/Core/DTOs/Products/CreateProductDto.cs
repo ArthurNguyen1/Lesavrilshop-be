@@ -18,17 +18,7 @@ namespace lesavrilshop_be.Core.DTOs.Products
         [Required]
         public string? DeliveryDescription { get; set; }
 
-        public int? ParentCategoryId { get; set; }
-
-        [Required]
-        public decimal OriginalPrice { get; set; }
-        public decimal SalePrice { get; set; }
-
-        [Required]
-        public int QuantityInStock { get; set; }
-
-        public int? ColorId { get; set; }
-
-        public int? SizeId { get; set; }
+        public List<string> Colors { get; set; }
+        public List<string> Sizes { get; set; }
     }
 }

@@ -45,8 +45,10 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            
+
             _context.Products.Add(product);
+            product.Colors = productDto.Colors;
+            product.Sizes = productDto.Sizes;
             await _context.SaveChangesAsync();
             
             return product;
