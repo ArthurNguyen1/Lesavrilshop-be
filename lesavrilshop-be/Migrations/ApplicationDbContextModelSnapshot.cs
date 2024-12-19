@@ -70,9 +70,6 @@ namespace lesavrilshop_be.Migrations
                     b.Property<int>("ProductItemId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ProductItemId1")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Quantity")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
@@ -86,8 +83,6 @@ namespace lesavrilshop_be.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductItemId");
-
-                    b.HasIndex("ProductItemId1");
 
                     b.HasIndex("CartId", "ProductItemId")
                         .IsUnique();
@@ -118,9 +113,6 @@ namespace lesavrilshop_be.Migrations
                     b.Property<int>("ProductItemId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ProductItemId1")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
@@ -134,8 +126,6 @@ namespace lesavrilshop_be.Migrations
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductItemId");
-
-                    b.HasIndex("ProductItemId1");
 
                     b.ToTable("order_item", (string)null);
                 });
@@ -389,10 +379,8 @@ namespace lesavrilshop_be.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("DeliveryDescription")
+                        .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -471,9 +459,6 @@ namespace lesavrilshop_be.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("boolean");
-
                     b.Property<int?>("ProductItemId")
                         .HasColumnType("integer");
 
@@ -514,10 +499,6 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("integer");
-
-                    b.Property<string>("SKU")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<decimal>("SalePrice")
                         .HasPrecision(10, 2)
@@ -833,10 +814,6 @@ namespace lesavrilshop_be.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("lesavrilshop_be.Core.Entities.Products.ProductItem", null)
-                        .WithMany("CartItems")
-                        .HasForeignKey("ProductItemId1");
-
                     b.Navigation("Cart");
 
                     b.Navigation("ProductItem");
@@ -855,10 +832,6 @@ namespace lesavrilshop_be.Migrations
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("lesavrilshop_be.Core.Entities.Products.ProductItem", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("ProductItemId1");
 
                     b.Navigation("Order");
 
@@ -1052,11 +1025,7 @@ namespace lesavrilshop_be.Migrations
 
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.ProductItem", b =>
                 {
-                    b.Navigation("CartItems");
-
                     b.Navigation("Images");
-
-                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Users.Address", b =>

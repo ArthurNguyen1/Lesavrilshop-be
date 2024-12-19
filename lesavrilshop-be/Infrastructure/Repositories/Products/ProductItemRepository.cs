@@ -45,7 +45,6 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 productItemDto.SizeId
             )
             {
-                SKU = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -65,7 +64,6 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             existingProductItem.OriginalPrice = productItem.OriginalPrice;
             existingProductItem.SalePrice = productItem.SalePrice;
             existingProductItem.QuantityInStock = productItem.QuantityInStock;
-            existingProductItem.SKU = productItem.SKU;
             existingProductItem.ProductId = productItem.ProductId;
             existingProductItem.ColorId = productItem.ColorId;
             existingProductItem.SizeId = productItem.SizeId;

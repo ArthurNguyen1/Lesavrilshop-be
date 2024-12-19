@@ -9,26 +9,15 @@ namespace lesavrilshop_be.Core.DTOs.Products
     public class CreateProductDto
     {
         [Required]
-        [MaxLength(200)]
-        public string Name { get; set; } = default!;
+        [StringLength(100)]
+        public string Name { get; set; }
 
         [Required]
-        public string ProductDescription { get; set; } = default!;
+        public string ProductDescription { get; set; }
 
         [Required]
-        public string? DeliveryDescription { get; set; }
+        public string DeliveryDescription { get; set; }
 
         public int? ParentCategoryId { get; set; }
-
-        [Required]
-        public decimal OriginalPrice { get; set; }
-        public decimal SalePrice { get; set; }
-
-        [Required]
-        public int QuantityInStock { get; set; }
-
-        public int? ColorId { get; set; }
-
-        public int? SizeId { get; set; }
     }
 }
