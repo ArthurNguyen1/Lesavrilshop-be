@@ -46,10 +46,6 @@ namespace lesavrilshop_be.Infrastructure.Data
             // Apply all configurations from the current assembly
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-            // Global query filters
-            modelBuilder.Entity<Product>()
-                .HasQueryFilter(p => p.DeletedAt == null);
-
             modelBuilder.Entity<ShopUser>()
                 .HasQueryFilter(u => u.IsActive);
 

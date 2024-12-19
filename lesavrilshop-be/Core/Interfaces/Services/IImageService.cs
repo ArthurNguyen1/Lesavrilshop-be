@@ -4,7 +4,6 @@ namespace lesavrilshop_be.Core.Interfaces.Services
 {
     public interface IImageService
     {
-        Task<ImageUploadResult> AddImageAsync(IFormFile file);
         Task<DeletionResult> DeleteImageAsync(string id);
 
         Task<string> UploadImageAsync(IFormFile file, string folder);

@@ -13,62 +13,51 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
     public class ProductItemRepository : IProductItemRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProductItemRepository> _logger;
 
-        public ProductItemRepository(ApplicationDbContext context)
+        public ProductItemRepository(ApplicationDbContext context, ILogger<ProductItemRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task<IEnumerable<ProductItem>> GetAllAsync()
+        public async Task<IEnumerable<ProductItem>> GetByProductIdAsync(int productId)
         {
             return await _context.ProductItems
-            .Include(pi => pi.Images)
-            .ToListAsync();
-                
+                .Include(pi => pi.Color)
+                .Include(pi => pi.Size)
+                .Where(pi => pi.ProductId == productId)
+                .ToListAsync();
         }
 
-        public async Task<ProductItem> GetByIdAsync(int id)
+        public async Task<ProductItem?> GetByIdAsync(int id)
         {
             return await _context.ProductItems
-            .Include(pi => pi.Images)
-            .FirstOrDefaultAsync(i => i.Id == id);
+                .Include(pi => pi.Color)
+                .Include(pi => pi.Size)
+                .FirstOrDefaultAsync(pi => pi.Id == id);
         }
 
-        public async Task<ProductItem> CreateAsync(CreateProductItemDto productItemDto)
+        public async Task<ProductItem> CreateAsync(ProductItem productItem)
         {
-            var productItem = new ProductItem(
-                productItemDto.OriginalPrice,
-                productItemDto.SalePrice,
-                productItemDto.QuantityInStock,
-                productItemDto.ProductId,
-                productItemDto.ColorId,
-                productItemDto.SizeId
-            )
-            {
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-            
-            _context.ProductItems.Add(productItem);
+            await _context.ProductItems.AddAsync(productItem);
             await _context.SaveChangesAsync();
-            
-            return productItem;
+
+            // Reload the product item with all relationships
+            return await _context.ProductItems
+                .Include(pi => pi.Color)
+                .Include(pi => pi.Size)
+                .FirstOrDefaultAsync(pi => pi.Id == productItem.Id)
+                ?? throw new Exception($"Failed to retrieve created product item with ID: {productItem.Id}");
         }
 
         public async Task UpdateAsync(ProductItem productItem)
         {
-            var existingProductItem = await _context.ProductItems.FindAsync(productItem.Id);
-            if (existingProductItem == null)
-                throw new KeyNotFoundException($"ProductItem with ID {productItem.Id} not found");
+            var existing = await _context.ProductItems.FindAsync(productItem.Id);
+            if (existing == null)
+                throw new KeyNotFoundException($"Product item with ID {productItem.Id} not found");
 
-            existingProductItem.OriginalPrice = productItem.OriginalPrice;
-            existingProductItem.SalePrice = productItem.SalePrice;
-            existingProductItem.QuantityInStock = productItem.QuantityInStock;
-            existingProductItem.ProductId = productItem.ProductId;
-            existingProductItem.ColorId = productItem.ColorId;
-            existingProductItem.SizeId = productItem.SizeId;
-            existingProductItem.UpdatedAt = DateTime.UtcNow;
-
+            _context.Entry(existing).CurrentValues.SetValues(productItem);
             await _context.SaveChangesAsync();
         }
 
@@ -76,15 +65,10 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         {
             var productItem = await _context.ProductItems.FindAsync(id);
             if (productItem == null)
-                throw new KeyNotFoundException($"ProductItem with ID {id} not found");
+                throw new KeyNotFoundException($"Product item with ID {id} not found");
 
             _context.ProductItems.Remove(productItem);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.ProductItems.AnyAsync(pi => pi.Id == id);
         }
     }
 }

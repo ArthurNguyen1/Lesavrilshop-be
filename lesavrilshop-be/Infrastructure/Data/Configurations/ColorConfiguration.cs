@@ -14,11 +14,18 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
         {
             builder.ToTable("color");
 
-            builder.HasKey(c => c.Id);
-
             builder.Property(c => c.ColorName)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            // Audit properties
+            builder.Property(c => c.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
+
+            builder.Property(c => c.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
 
         }
     }

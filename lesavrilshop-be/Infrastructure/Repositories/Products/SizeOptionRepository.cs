@@ -22,7 +22,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         public async Task<IEnumerable<SizeOption>> GetAllAsync()
         {
             return await _context.SizeOptions.ToListAsync();
-                
+
         }
 
         public async Task<SizeOption> GetByIdAsync(int id)
@@ -39,10 +39,10 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            
+
             _context.SizeOptions.Add(sizeOption);
             await _context.SaveChangesAsync();
-            
+
             return sizeOption;
         }
 
@@ -52,7 +52,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             if (existingSizeOption == null)
                 throw new KeyNotFoundException($"SizeOption with ID {sizeOption.Id} not found");
 
-            existingSizeOption.SizeName= sizeOption.SizeName;
+            existingSizeOption.SizeName = sizeOption.SizeName;
             existingSizeOption.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

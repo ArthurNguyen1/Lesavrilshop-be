@@ -56,6 +56,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -101,6 +102,8 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
 builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IProductService, lesavrilshop_be.Application.Services.ProductService>();
+
 
 //Repositories
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

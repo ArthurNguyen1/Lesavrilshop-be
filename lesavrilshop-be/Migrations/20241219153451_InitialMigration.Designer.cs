@@ -12,8 +12,8 @@ using lesavrilshop_be.Infrastructure.Data;
 namespace lesavrilshop_be.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241025113940_V1")]
-    partial class V1
+    [Migration("20241219153451_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,12 +35,12 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("UserId")
@@ -67,10 +67,13 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("ProductItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ProductItemId1")
                         .HasColumnType("integer");
 
                     b.Property<int>("Quantity")
@@ -80,12 +83,14 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductItemId");
+
+                    b.HasIndex("ProductItemId1");
 
                     b.HasIndex("CartId", "ProductItemId")
                         .IsUnique();
@@ -103,7 +108,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("OrderId")
@@ -116,12 +121,15 @@ namespace lesavrilshop_be.Migrations
                     b.Property<int>("ProductItemId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("ProductItemId1")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
@@ -129,6 +137,8 @@ namespace lesavrilshop_be.Migrations
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductItemId");
+
+                    b.HasIndex("ProductItemId1");
 
                     b.ToTable("order_item", (string)null);
                 });
@@ -143,7 +153,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Status")
@@ -153,7 +163,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
@@ -208,7 +218,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Description")
@@ -227,7 +237,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
@@ -248,14 +258,14 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Note")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("integer");
@@ -280,7 +290,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("UserId")
@@ -311,11 +321,6 @@ namespace lesavrilshop_be.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -373,36 +378,58 @@ namespace lesavrilshop_be.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Colors")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("DeliveryDescription")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("OriginalPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("ProductDescription")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("QuantityInStock")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("RatingAverage")
+                        .ValueGeneratedOnAdd()
                         .HasPrecision(3, 2)
-                        .HasColumnType("numeric(3,2)");
+                        .HasColumnType("numeric(3,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<int>("RatingQuantity")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<decimal>("SalePrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("Sizes")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
@@ -410,8 +437,6 @@ namespace lesavrilshop_be.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("product", (string)null);
                 });
@@ -455,24 +480,34 @@ namespace lesavrilshop_be.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("image_url");
 
-                    b.Property<int>("ProductItemId")
-                        .HasColumnType("integer");
+                    b.Property<bool>("IsMain")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_main");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductItemId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("product_image", (string)null);
                 });
@@ -485,44 +520,59 @@ namespace lesavrilshop_be.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ColorId")
-                        .HasColumnType("integer");
+                    b.Property<int?>("ColorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("color_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<decimal>("OriginalPrice")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("original_price");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
 
                     b.Property<int>("QuantityInStock")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("quantity_in_stock");
+
+                    b.Property<string>("SKU")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("sku");
 
                     b.Property<decimal>("SalePrice")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("sale_price");
 
-                    b.Property<int>("SizeId")
-                        .HasColumnType("integer");
+                    b.Property<int?>("SizeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("size_id");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ColorId");
 
-                    b.HasIndex("SizeId");
+                    b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductId", "ColorId", "SizeId")
-                        .IsUnique();
+                    b.HasIndex("SizeId");
 
                     b.ToTable("product_item", (string)null);
                 });
@@ -542,8 +592,8 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<string>("SizeName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
@@ -570,21 +620,21 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ReviewedProductId")
+                    b.Property<int?>("ReviewedProductId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -640,8 +690,6 @@ namespace lesavrilshop_be.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("address", (string)null);
                 });
 
@@ -654,11 +702,11 @@ namespace lesavrilshop_be.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTime?>("Birthday")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -671,7 +719,9 @@ namespace lesavrilshop_be.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -680,7 +730,8 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -696,8 +747,8 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -707,13 +758,19 @@ namespace lesavrilshop_be.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("shop_user", (string)null);
                 });
 
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Users.UserAddress", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AddressId")
                         .HasColumnType("integer");
@@ -723,17 +780,36 @@ namespace lesavrilshop_be.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.Property<string>("Customer")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<bool>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.HasKey("UserId", "AddressId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("UserId", "IsDefault")
+                        .IsUnique()
+                        .HasFilter("\"IsDefault\" = true");
 
                     b.ToTable("user_address", (string)null);
                 });
@@ -748,7 +824,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("Id")
@@ -756,7 +832,7 @@ namespace lesavrilshop_be.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("UserId", "ProductId");
@@ -791,6 +867,10 @@ namespace lesavrilshop_be.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("lesavrilshop_be.Core.Entities.Products.ProductItem", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductItemId1");
+
                     b.Navigation("Cart");
 
                     b.Navigation("ProductItem");
@@ -809,6 +889,10 @@ namespace lesavrilshop_be.Migrations
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("lesavrilshop_be.Core.Entities.Products.ProductItem", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductItemId1");
 
                     b.Navigation("Order");
 
@@ -860,15 +944,6 @@ namespace lesavrilshop_be.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.Product", b =>
-                {
-                    b.HasOne("lesavrilshop_be.Core.Entities.Products.Category", "ParentCategory")
-                        .WithMany()
-                        .HasForeignKey("ParentCategoryId");
-
-                    b.Navigation("ParentCategory");
-                });
-
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.ProductCategory", b =>
                 {
                     b.HasOne("lesavrilshop_be.Core.Entities.Products.Category", "Category")
@@ -890,34 +965,32 @@ namespace lesavrilshop_be.Migrations
 
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.ProductImage", b =>
                 {
-                    b.HasOne("lesavrilshop_be.Core.Entities.Products.ProductItem", "ProductItem")
+                    b.HasOne("lesavrilshop_be.Core.Entities.Products.Product", "Product")
                         .WithMany("Images")
-                        .HasForeignKey("ProductItemId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProductItem");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.ProductItem", b =>
                 {
                     b.HasOne("lesavrilshop_be.Core.Entities.Products.Color", "Color")
-                        .WithMany()
+                        .WithMany("ProductItems")
                         .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("lesavrilshop_be.Core.Entities.Products.Product", "Product")
-                        .WithMany("ProductItems")
+                        .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("lesavrilshop_be.Core.Entities.Products.SizeOption", "Size")
-                        .WithMany()
+                        .WithMany("ProductItems")
                         .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Color");
 
@@ -931,27 +1004,14 @@ namespace lesavrilshop_be.Migrations
                     b.HasOne("lesavrilshop_be.Core.Entities.Products.Product", "ReviewedProduct")
                         .WithMany("Reviews")
                         .HasForeignKey("ReviewedProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("lesavrilshop_be.Core.Entities.Users.ShopUser", "User")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ReviewedProduct");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("lesavrilshop_be.Core.Entities.Users.Address", b =>
-                {
-                    b.HasOne("lesavrilshop_be.Core.Entities.Users.ShopUser", "User")
-                        .WithMany("Addresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -959,13 +1019,13 @@ namespace lesavrilshop_be.Migrations
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Users.UserAddress", b =>
                 {
                     b.HasOne("lesavrilshop_be.Core.Entities.Users.Address", "Address")
-                        .WithMany()
+                        .WithMany("UserAddresses")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("lesavrilshop_be.Core.Entities.Users.ShopUser", "User")
-                        .WithMany()
+                        .WithMany("UserAddresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1011,28 +1071,46 @@ namespace lesavrilshop_be.Migrations
                     b.Navigation("Subcategories");
                 });
 
+            modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.Color", b =>
+                {
+                    b.Navigation("ProductItems");
+                });
+
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.Product", b =>
                 {
-                    b.Navigation("ProductCategories");
+                    b.Navigation("Images");
 
-                    b.Navigation("ProductItems");
+                    b.Navigation("ProductCategories");
 
                     b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.ProductItem", b =>
                 {
-                    b.Navigation("Images");
+                    b.Navigation("CartItems");
+
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("lesavrilshop_be.Core.Entities.Products.SizeOption", b =>
+                {
+                    b.Navigation("ProductItems");
+                });
+
+            modelBuilder.Entity("lesavrilshop_be.Core.Entities.Users.Address", b =>
+                {
+                    b.Navigation("UserAddresses");
                 });
 
             modelBuilder.Entity("lesavrilshop_be.Core.Entities.Users.ShopUser", b =>
                 {
-                    b.Navigation("Addresses");
-
-                    b.Navigation("Cart")
-                        .IsRequired();
+                    b.Navigation("Cart");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("UserAddresses");
                 });
 #pragma warning restore 612, 618
         }
