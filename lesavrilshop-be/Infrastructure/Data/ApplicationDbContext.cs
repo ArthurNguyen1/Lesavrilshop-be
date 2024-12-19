@@ -49,6 +49,24 @@ namespace lesavrilshop_be.Infrastructure.Data
             modelBuilder.Entity<ShopUser>()
                 .HasQueryFilter(u => u.IsActive);
 
+            // Configure Product entity: Colors and Sizes as List<string>
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.Property(p => p.Colors)
+                    .HasColumnType("text") // Adjust for your database provider
+                    .HasConversion(
+                        v => string.Join(",", v), // Serialize List<string> to a comma-separated string
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() // Deserialize back to List<string>
+                    );
+
+                entity.Property(p => p.Sizes)
+                    .HasColumnType("text") // Adjust for your database provider
+                    .HasConversion(
+                        v => string.Join(",", v), // Serialize List<string> to a comma-separated string
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() // Deserialize back to List<string>
+                    );
+            });
+
             // Add created_at and updated_at triggers for PostgreSQL
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
