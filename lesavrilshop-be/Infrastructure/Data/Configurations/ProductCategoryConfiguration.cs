@@ -13,18 +13,25 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<ProductCategory> builder)
         {
             builder.ToTable("product_category");
-            
+
+            // Remove any existing primary key configuration
             builder.HasKey(pc => new { pc.ProductId, pc.CategoryId });
-            
+
+            // Configure relationships
             builder.HasOne(pc => pc.Product)
                 .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-                
+                .HasForeignKey(pc => pc.ProductId);
+
             builder.HasOne(pc => pc.Category)
                 .WithMany(c => c.ProductCategories)
-                .HasForeignKey(pc => pc.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(pc => pc.CategoryId);
+
+            // Configure timestamps
+            builder.Property(pc => pc.CreatedAt)
+                .HasColumnType("timestamp with time zone");
+
+            builder.Property(pc => pc.UpdatedAt)
+                .HasColumnType("timestamp with time zone");
         }
     }
 }

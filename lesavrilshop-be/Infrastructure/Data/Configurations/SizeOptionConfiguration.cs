@@ -14,11 +14,18 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
         {
             builder.ToTable("size_option");
 
-            builder.HasKey(s => s.Id);
-
             builder.Property(s => s.SizeName)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(50);
+
+            // Audit properties
+            builder.Property(s => s.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
+
+            builder.Property(s => s.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
 
         }
     }

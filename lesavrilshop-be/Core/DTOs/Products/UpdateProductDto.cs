@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace lesavrilshop_be.Core.DTOs.Products
 {
-    public class CreateProductItemDto
+    public class UpdateProductDto
     {
-
-        public string? ColorName { get; set; }
-        public string? SizeName { get; set; }
+        [Required]
+        [MaxLength(200)]
+        public string Name { get; set; } = default!;
 
         [Required]
-        public string SKU { get; set; } = default!;
+        public string ProductDescription { get; set; } = default!;
+
+        public string? DeliveryDescription { get; set; }
 
         [Required]
         [Range(0, double.MaxValue)]
@@ -26,5 +28,17 @@ namespace lesavrilshop_be.Core.DTOs.Products
         [Required]
         [Range(0, int.MaxValue)]
         public int QuantityInStock { get; set; }
+
+        [Required]
+        public List<string> Colors { get; set; } = [];
+
+        [Required]
+        public List<string> Sizes { get; set; } = [];
+
+        [Required]
+        public List<int> CategoryIds { get; set; } = [];
+
+        public bool IsActive { get; set; } = true;
+
     }
 }

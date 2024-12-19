@@ -13,18 +13,25 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.ToTable("category");
-            
+
             builder.Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-                
-            builder.Property(c => c.Image)
-                .HasMaxLength(255);
-                
+
+
             builder.HasOne(c => c.ParentCategory)
                 .WithMany(c => c.Subcategories)
                 .HasForeignKey(c => c.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Audit properties
+            builder.Property(c => c.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
+
+            builder.Property(c => c.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp with time zone");
         }
     }
 }

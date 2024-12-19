@@ -70,8 +70,8 @@ namespace lesavrilshop_be.Api.Controllers.Products
                     var parentExists = await _categoryRepository.ExistsAsync(categoryDto.ParentCategoryId.Value);
                     if (!parentExists)
                     {
-                        return BadRequest(new 
-                        { 
+                        return BadRequest(new
+                        {
                             error = "Parent category does not exist",
                             code = "INVALID_PARENT_CATEGORY"
                         });
@@ -79,7 +79,7 @@ namespace lesavrilshop_be.Api.Controllers.Products
                 }
 
                 var createdCategory = await _categoryRepository.CreateAsync(categoryDto);
-                
+
                 return CreatedAtAction(
                     nameof(GetCategory),
                     new { id = createdCategory.Id },
@@ -88,8 +88,8 @@ namespace lesavrilshop_be.Api.Controllers.Products
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating category");
-                return StatusCode(500, new 
-                { 
+                return StatusCode(500, new
+                {
                     error = "Internal server error",
                     code = "INTERNAL_SERVER_ERROR"
                 });
@@ -159,5 +159,9 @@ namespace lesavrilshop_be.Api.Controllers.Products
                 return StatusCode(500, "Internal server error");
             }
         }
+
+
+
+
     }
 }

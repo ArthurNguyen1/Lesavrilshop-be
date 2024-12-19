@@ -9,11 +9,10 @@ namespace lesavrilshop_be.Core.Interfaces.Repositories.Products
 {
     public interface IProductItemRepository
     {
-        Task<IEnumerable<ProductItem>> GetAllAsync();
-        Task<ProductItem> GetByIdAsync(int id);
-        Task<ProductItem> CreateAsync(CreateProductItemDto productItemDto);
+        Task<IEnumerable<ProductItem>> GetByProductIdAsync(int productId);
+        Task<ProductItem?> GetByIdAsync(int id);
+        Task<ProductItem> CreateAsync(ProductItem productItem);
         Task UpdateAsync(ProductItem productItem);
         Task DeleteAsync(int id);
-        Task<bool> ExistsAsync(int id);
     }
 }

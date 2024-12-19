@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace lesavrilshop_be.Infrastructure.Data.Configurations
 {
-     public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
+    public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
     {
         public void Configure(EntityTypeBuilder<ProductImage> builder)
         {
@@ -24,7 +24,7 @@ namespace lesavrilshop_be.Infrastructure.Data.Configurations
                 .HasDefaultValue(false)
                 .HasColumnName("is_main");
 
-            builder.Property(pi => pi.Id)
+            builder.Property(pi => pi.ProductId)
                 .IsRequired()
                 .HasColumnName("product_id");
 

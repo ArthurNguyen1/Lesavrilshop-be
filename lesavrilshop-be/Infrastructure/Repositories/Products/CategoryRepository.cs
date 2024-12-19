@@ -39,17 +39,16 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         {
             var category = new Category(
                 categoryDto.Name,
-                categoryDto.Image,
                 categoryDto.ParentCategoryId
             )
             {
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            
+
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
-            
+
             return category;
         }
 
@@ -60,7 +59,6 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 throw new KeyNotFoundException($"Category with ID {category.Id} not found");
 
             existingCategory.Name = category.Name;
-            existingCategory.Image = category.Image;
             existingCategory.ParentCategoryId = category.ParentCategoryId;
             existingCategory.UpdatedAt = DateTime.UtcNow;
 
@@ -94,5 +92,11 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 .Where(c => c.ParentCategoryId == parentId)
                 .ToListAsync();
         }
+
+
+
+
+
+
     }
 }

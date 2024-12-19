@@ -9,11 +9,14 @@ namespace lesavrilshop_be.Core.Interfaces.Repositories.Products
 {
     public interface IProductCategoryRepository
     {
-        Task<IEnumerable<ProductCategory>> GetAllAsync();
-        Task<ProductCategory> GetByIdAsync(int id);
-        Task<ProductCategory> CreateAsync(CreateProductCategoryDto productCategoryDto);
-        Task UpdateAsync(ProductCategory productCategory);
-        Task DeleteAsync(int id);
-        Task<bool> ExistsAsync(int id);
+        Task<IEnumerable<ProductCategory>> GetByProductIdAsync(int productId);
+        Task<IEnumerable<ProductCategory>> GetByCategoryIdAsync(int categoryId);
+        Task<bool> ExistsAsync(int productId, int categoryId);
+        Task<ProductCategory> CreateAsync(ProductCategory productCategory);
+        Task CreateRangeAsync(IEnumerable<ProductCategory> productCategories);
+        Task DeleteAsync(int productId, int categoryId);
+        Task DeleteByProductIdAsync(int productId);
+        Task DeleteByCategoryIdAsync(int categoryId);
+        // Task UpdateProductCategoriesAsync(int productId, IEnumerable<int> categoryIds);
     }
 }

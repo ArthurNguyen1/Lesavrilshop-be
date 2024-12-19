@@ -22,7 +22,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         public async Task<IEnumerable<Color>> GetAllAsync()
         {
             return await _context.Colors.ToListAsync();
-                
+
         }
 
         public async Task<Color> GetByIdAsync(int id)
@@ -39,10 +39,10 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            
+
             _context.Colors.Add(color);
             await _context.SaveChangesAsync();
-            
+
             return color;
         }
 
@@ -52,7 +52,7 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
             if (existingColor == null)
                 throw new KeyNotFoundException($"Color with ID {color.Id} not found");
 
-            existingColor.ColorName= color.ColorName;
+            existingColor.ColorName = color.ColorName;
             existingColor.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -71,6 +71,25 @@ namespace lesavrilshop_be.Infrastructure.Repositories.Products
         public async Task<bool> ExistsAsync(int id)
         {
             return await _context.Colors.AnyAsync(c => c.Id == id);
+        }
+
+        public async Task<Color> GetOrCreateByNameAsync(string colorName)
+        {
+            var color = await _context.Colors
+                .FirstOrDefaultAsync(c => c.ColorName.ToLower() == colorName.ToLower());
+
+            if (color == null)
+            {
+                color = new Color(colorName)
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                _context.Colors.Add(color);
+                await _context.SaveChangesAsync();
+            }
+
+            return color;
         }
     }
 }
